@@ -2,6 +2,7 @@
 kotlin = "2.0.0"
 shadow = "8.3.3"
 simpleCloudController = "0.0.30-dev.e3e27fc"
+adventure = "4.18.0"
 
 [libraries]
 kotlinJvm = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
@@ -10,8 +11,12 @@ kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotli
 simpleCloudControllerApi = { module = "app.simplecloud.controller:controller-api", version.ref = "simpleCloudController" }
 simpleCloudControllerShared = { module = "app.simplecloud.controller:controller-shared", version.ref = "simpleCloudController" }
 
+adventureApi = { module = "net.kyori:adventure-api", version.ref = "adventure" }
+adventureMiniMessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
+
 [bundles]
 simpleCloudController = ["simpleCloudControllerApi", "simpleCloudControllerShared"]
+adventure = ["adventureApi", "adventureMiniMessage"]
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

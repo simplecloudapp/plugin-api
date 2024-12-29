@@ -27,6 +27,8 @@ subprojects {
         testImplementation(rootProject.libs.kotlinTest)
         implementation(rootProject.libs.kotlinJvm)
         implementation(rootProject.libs.bundles.simpleCloudController)
+
+        compileOnly(rootProject.libs.bundles.adventure)
     }
 
     kotlin {
