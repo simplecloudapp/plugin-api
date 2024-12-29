@@ -5,26 +5,33 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-group = "app.simplecloud.plugin"
-version = "1.0-SNAPSHOT"
+allprojects {
+    group = "app.simplecloud.plugin"
+    version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-    maven("https://libraries.minecraft.net")
-    maven("https://buf.build/gen/maven")
-    maven("https://repo.simplecloud.app/snapshots")
-    maven("https://buf.build/gen/maven")
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven("https://libraries.minecraft.net")
+        maven("https://buf.build/gen/maven")
+        maven("https://repo.simplecloud.app/snapshots")
+        maven("https://buf.build/gen/maven")
+    }
 }
 
-dependencies {
-    testImplementation(rootProject.libs.kotlinTest)
-    implementation(rootProject.libs.kotlinJvm)
-    implementation(rootProject.libs.bundles.simpleCloudController)
-}
+subprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "com.gradleup.shadow")
 
-kotlin {
-    jvmToolchain(21)
+    dependencies {
+        testImplementation(rootProject.libs.kotlinTest)
+        implementation(rootProject.libs.kotlinJvm)
+        implementation(rootProject.libs.bundles.simpleCloudController)
+    }
+
+    kotlin {
+        jvmToolchain(21)
+    }
 }
 
 tasks.test {
