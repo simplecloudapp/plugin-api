@@ -42,10 +42,10 @@ abstract class AbstractPlaceholderProvider<T>(
             *getArgumentsResolvers(this.controllerApi, value).toTypedArray(),
             *argumentsResolver
         )
-        val resolvers = this.executor.getTagResolvers(this.controllerApi, value, prefix).toTypedArray()
-        println("singleResolvers: ${resolvers.size} | available: ${availableArgumentsResolver.size}")
+        val singleTagResolver = this.executor.getTagResolver(this.controllerApi, value, prefix)
+        println("singleResolvers: ${singleTagResolver.has("group_name")} | available: ${availableArgumentsResolver.size}")
         return TagResolver.resolver(
-            *resolvers,
+            singleTagResolver,
             *availableArgumentsResolver
                 .map { convertArgumentsResolverToTagResolver(it, prefix) }
                 .toTypedArray()
