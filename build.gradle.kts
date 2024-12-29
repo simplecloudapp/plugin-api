@@ -1,5 +1,4 @@
 import org.gradle.kotlin.dsl.invoke
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.kotlin)
@@ -21,30 +20,13 @@ repositories {
 dependencies {
     testImplementation(rootProject.libs.kotlinTest)
     implementation(rootProject.libs.kotlinJvm)
+    implementation(rootProject.libs.bundles.simpleCloudController)
 }
 
 kotlin {
     jvmToolchain(21)
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "21"
-}
-
 tasks.test {
     useJUnitPlatform()
-}
-
-tasks.processResources {
-    expand("version" to project.version,
-        "name" to project.name)
-}
-
-tasks.shadowJar {
-    relocate("io.grpc", "app.simplecloud.relocate.grpc")
-    relocate("app.simplecloud.controller", "app.simplecloud.relocate.controller")
-    relocate("app.simplecloud.pubsub", "app.simplecloud.relocate.pubsub")
-    relocate("app.simplecloud.droplet", "app.simplecloud.relocate.droplet")
-    relocate("build.buf.gen", "app.simplecloud.relocate.buf")
-    relocate("com.google.protobuf", "app.simplecloud.relocate.protobuf")
 }
