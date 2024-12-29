@@ -11,16 +11,16 @@ class SingleServerPlaceholderExecutor : SinglePlaceholderExecutor<Server> {
 
     override fun getAsyncPlaceholders() = listOf<AsyncPlaceholder<Server>>(
         AsyncPlaceholder("id") { it.uniqueId },
-        AsyncPlaceholder("type") { it.type },
-        AsyncPlaceholder("group_name") { it.group },
         AsyncPlaceholder("numerical_id") { it.numericalId },
+        AsyncPlaceholder("group_name") { it.group },
+        AsyncPlaceholder("type") { it.type },
+        AsyncPlaceholder("state") { it.state },
         AsyncPlaceholder("ip") { it.ip },
         AsyncPlaceholder("port") { it.port },
+        AsyncPlaceholder("online_players") { it.playerCount },
         AsyncPlaceholder("max_players") { it.maxPlayers },
         AsyncPlaceholder("min_memory") { it.minMemory },
-        AsyncPlaceholder("max_memory") { it.maxMemory },
-        AsyncPlaceholder("player_count") { it.playerCount }, // TODO: extra option
-        AsyncPlaceholder("state") { it.state }
+        AsyncPlaceholder("max_memory") { it.maxMemory }
     )
 
 }
