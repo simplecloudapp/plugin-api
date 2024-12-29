@@ -17,14 +17,18 @@ interface SinglePlaceholderExecutor<T> {
     fun getAsyncPlaceholders(controllerApi: ControllerApi.Coroutine): List<AsyncPlaceholder<T>>
 
     /**
-     * Gets a list with all available tag resolvers from the [getAsyncPlaceholders] method
+     * Gets a [TagResolver] with all available tag resolvers from the [getAsyncPlaceholders] method
      * @param controllerApi the instance of [ControllerApi.Coroutine]
      * @param value for the placeholder
      * @param prefix first name for the placeholder key
      */
-    suspend fun getTagResolvers(controllerApi: ControllerApi.Coroutine, value: T, prefix: String? = null): List<TagResolver> {
-        return getAsyncPlaceholders(controllerApi)
-            .map { it.invokeTagResolver(value) }
+    suspend fun getTagResolver(
+        controllerApi: ControllerApi.Coroutine,
+        value: T,
+        prefix: String? = null,
+    ): TagResolver {
+        return TagResolver.resolver(getAsyncPlaceholders(controllerApi)
+            .map { it.invokeTagResolver(value) })
     }
 
 }
