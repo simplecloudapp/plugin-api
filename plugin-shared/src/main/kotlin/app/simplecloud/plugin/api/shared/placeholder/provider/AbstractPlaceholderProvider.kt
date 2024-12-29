@@ -43,7 +43,6 @@ abstract class AbstractPlaceholderProvider<T>(
             *argumentsResolver
         )
         val singleTagResolver = this.executor.getTagResolver(this.controllerApi, value, prefix)
-        println("singleResolvers: ${singleTagResolver.has("group_name")} | available: ${availableArgumentsResolver.size}")
         return TagResolver.resolver(
             singleTagResolver,
             *availableArgumentsResolver
