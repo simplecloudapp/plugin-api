@@ -1,8 +1,9 @@
 package app.simplecloud.plugin.api.shared.placeholder.provider
 
+import app.simplecloud.controller.api.ControllerApi
 import app.simplecloud.controller.shared.server.Server
+import app.simplecloud.plugin.api.shared.placeholder.argument.*
 import app.simplecloud.plugin.api.shared.placeholder.single.SingleServerPlaceholderExecutor
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 
 /**
  * @author Niklas Nieberler
@@ -11,7 +12,9 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 class ServerPlaceholderProvider : AbstractPlaceholderProvider<Server>(
     SingleServerPlaceholderExecutor()
 ) {
-    override suspend fun getOtherTagResolvers(): List<TagResolver> {
-        TODO("Not yet implemented")
-    }
+
+    override suspend fun getArgumentsResolvers(controllerApi: ControllerApi.Coroutine, value: Server) = listOf(
+        PropertiesArgumentsResolver(value.properties)
+    )
+
 }

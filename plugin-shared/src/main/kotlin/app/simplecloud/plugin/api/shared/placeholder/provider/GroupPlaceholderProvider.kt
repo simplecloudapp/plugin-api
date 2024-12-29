@@ -1,8 +1,10 @@
 package app.simplecloud.plugin.api.shared.placeholder.provider
 
+import app.simplecloud.controller.api.ControllerApi
 import app.simplecloud.controller.shared.group.Group
+import app.simplecloud.plugin.api.shared.placeholder.argument.*
+import app.simplecloud.plugin.api.shared.placeholder.argument.group.*
 import app.simplecloud.plugin.api.shared.placeholder.single.SingleGroupPlaceholderExecutor
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 
 /**
  * @author Niklas Nieberler
@@ -11,7 +13,11 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 class GroupPlaceholderProvider : AbstractPlaceholderProvider<Group>(
     SingleGroupPlaceholderExecutor()
 ) {
-    override suspend fun getOtherTagResolvers(): List<TagResolver> {
-        TODO("Not yet implemented")
-    }
+
+    override suspend fun getArgumentsResolvers(controllerApi: ControllerApi.Coroutine, value: Group) = listOf(
+        PropertiesArgumentsResolver(value.properties),
+        PlayerCountArgumentsResolver(controllerApi, value),
+        ServerCountArgumentsResolver(controllerApi, value)
+    )
+
 }
