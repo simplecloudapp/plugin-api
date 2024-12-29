@@ -29,21 +29,23 @@ abstract class AbstractPlaceholderProvider<T>(
     ): List<ArgumentsResolver>
 
     /**
-     * Gets the list of all [TagResolver]
+     * Gets the sum of all [TagResolver]
      * @param value for the placeholder
      * @param prefix of the placeholder key
      */
-    suspend fun getTagResolvers(
+    suspend fun getTagResolver(
         value: T,
         prefix: String? = null,
         vararg argumentsResolver: ArgumentsResolver,
-    ): List<TagResolver> {
+    ): TagResolver {
         val availableArgumentsResolver = listOf(
             *getArgumentsResolvers(this.controllerApi, value).toTypedArray(),
             *argumentsResolver
         )
-        return listOf(
-            *this.executor.getTagResolvers(this.controllerApi, value, prefix).toTypedArray(),
+        val resolvers = this.executor.getTagResolvers(this.controllerApi, value, prefix).toTypedArray()
+        println("singleResolvers: ${resolvers.size} | available: ${availableArgumentsResolver.size}")
+        return TagResolver.resolver(
+            *resolvers,
             *availableArgumentsResolver
                 .map { convertArgumentsResolverToTagResolver(it, prefix) }
                 .toTypedArray()
@@ -64,7 +66,7 @@ abstract class AbstractPlaceholderProvider<T>(
     ): Component {
         return text(
             string,
-            *getTagResolvers(value, prefix, *argumentsResolver).toTypedArray(),
+            getTagResolver(value, prefix, *argumentsResolver),
         )
     }
 
