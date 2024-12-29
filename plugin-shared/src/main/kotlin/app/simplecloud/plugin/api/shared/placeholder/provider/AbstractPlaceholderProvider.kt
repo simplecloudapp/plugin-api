@@ -43,7 +43,7 @@ abstract class AbstractPlaceholderProvider<T>(
             *argumentsResolver
         )
         return listOf(
-            *this.executor.getTagResolvers(value, prefix).toTypedArray(),
+            *this.executor.getTagResolvers(this.controllerApi, value, prefix).toTypedArray(),
             *availableArgumentsResolver
                 .map { convertArgumentsResolverToTagResolver(it, prefix) }
                 .toTypedArray()
