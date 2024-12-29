@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.from
 import org.gradle.kotlin.dsl.invoke
 
 plugins {
@@ -26,6 +27,7 @@ allprojects {
 
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "net.thebugmc.gradle.sonatype-central-portal-publisher")
 
     dependencies {
         compileOnly(rootProject.libs.kotlinJvm)
@@ -36,63 +38,35 @@ subprojects {
     kotlin {
         jvmToolchain(21)
     }
-}
 
-publishing {
-    repositories {
-        maven {
-            name = "simplecloud"
-            url = uri("https://repo.simplecloud.app/snapshots/")
-            credentials {
-                username = System.getenv("SIMPLECLOUD_USERNAME")?: (project.findProperty("simplecloudUsername") as? String)
-                password = System.getenv("SIMPLECLOUD_PASSWORD")?: (project.findProperty("simplecloudPassword") as? String)
+    publishing {
+        repositories {
+            maven {
+                name = "simplecloud"
+                url = uri("https://repo.simplecloud.app/snapshots/")
+                credentials {
+                    username = System.getenv("SIMPLECLOUD_USERNAME")?: (project.findProperty("simplecloudUsername") as? String)
+                    password = System.getenv("SIMPLECLOUD_PASSWORD")?: (project.findProperty("simplecloudPassword") as? String)
+                }
+                authentication {
+                    create<BasicAuthentication>("basic")
+                }
             }
-            authentication {
-                create<BasicAuthentication>("basic")
+        }
+
+        publications {
+            create<MavenPublication>("mavenJava") {
+                from(components["java"])
             }
         }
     }
 
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
+    signing {
+        if (commitHash != null) {
+            return@signing
         }
+
+        sign(publishing.publications)
+        useGpgCmd()
     }
-}
-
-centralPortal {
-    name = project.name
-
-    username = project.findProperty("sonatypeUsername") as? String
-    password = project.findProperty("sonatypePassword") as? String
-
-    pom {
-        name.set("SimpleCloud Plugin API")
-        description.set("Commonly used classes among plugins")
-        url.set("https://github.com/theSimpleCloud/plugin-api")
-        developers {
-            developer {
-                id.set("MrManHD")
-            }
-        }
-        licenses {
-            license {
-                name.set("Apache-2.0")
-                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-            }
-        }
-        scm {
-            url.set("https://github.com/theSimpleCloud/plugin-api.git")
-            connection.set("git:git@github.com:theSimpleCloud/plugin-api.git")
-        }
-    }
-}
-
-signing {
-    if (commitHash != null) {
-        return@signing
-    }
-
-    sign(publishing.publications)
-    useGpgCmd()
 }
