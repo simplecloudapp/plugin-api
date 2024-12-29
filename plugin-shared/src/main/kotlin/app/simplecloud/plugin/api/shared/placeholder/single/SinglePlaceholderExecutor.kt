@@ -28,7 +28,7 @@ interface SinglePlaceholderExecutor<T> {
         prefix: String? = null,
     ): TagResolver {
         return TagResolver.resolver(getAsyncPlaceholders(controllerApi)
-            .map { it.invokeTagResolver(value) })
+            .map { it.invokeTagResolver(value, prefix) })
     }
 
 }
