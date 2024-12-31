@@ -1,6 +1,3 @@
-import org.gradle.kotlin.dsl.from
-import org.gradle.kotlin.dsl.invoke
-
 plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.sonatype.central.portal.publisher)
