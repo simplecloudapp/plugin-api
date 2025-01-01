@@ -2,6 +2,7 @@ package app.simplecloud.plugin.api.shared.pattern
 
 import app.simplecloud.controller.api.ControllerApi
 import app.simplecloud.controller.shared.group.Group
+import app.simplecloud.controller.shared.server.Server
 
 /**
  * @author Niklas Nieberler
@@ -32,6 +33,16 @@ class ServerPatternIdentifier(
         val numericalId = matchResult.groups["numericalId"]?.value?.toInt()
             ?: throw IllegalArgumentException("Numerical ID not found")
         return Pair(groupName, numericalId)
+    }
+
+    /**
+     * Gets a server string as a set in the pattern
+     * @param server replaces it to pattern
+     */
+    fun parseServerToPattern(server: Server): String {
+        return this.pattern
+            .replace("<group_name>", server.group)
+            .replace("<numerical_id>", server.numericalId.toString())
     }
 
     /**
