@@ -42,6 +42,8 @@ class ServerPatternIdentifier(
     fun parseServerToPattern(server: Server): String {
         return this.pattern
             .replace("<group_name>", server.group)
+            .replace("<id>", server.uniqueId)
+            .replace("<unique_id>", server.uniqueId)
             .replace("<numerical_id>", server.numericalId.toString())
     }
 
