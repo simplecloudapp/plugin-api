@@ -1,4 +1,4 @@
-# Droplet API
+# Plugin API
 
 ![Banner][banner]
 
