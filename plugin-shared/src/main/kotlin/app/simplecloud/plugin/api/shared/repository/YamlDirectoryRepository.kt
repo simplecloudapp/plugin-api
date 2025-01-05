@@ -1,50 +1,54 @@
 package app.simplecloud.plugin.api.shared.repository
 
 import kotlinx.coroutines.*
-import org.spongepowered.configurate.ConfigurationNode
 import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.kotlin.objectMapperFactory
 import org.spongepowered.configurate.loader.ParsingException
-import org.spongepowered.configurate.serialize.SerializationException
-import org.spongepowered.configurate.serialize.TypeSerializer
+import org.spongepowered.configurate.serialize.TypeSerializerCollection
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 import java.io.File
-import java.lang.reflect.Type
-import java.nio.file.*
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardWatchEventKinds
 
-abstract class YamlDirectoryRepository<E>(
+abstract class YamlDirectoryRepository<I, E>(
     private val directory: Path,
     private val clazz: Class<E>,
-) {
+) : LoadableRepository<I, E> {
 
     private val watchService = FileSystems.getDefault().newWatchService()
     private val loaders = mutableMapOf<File, YamlConfigurationLoader>()
-    protected val entities = mutableMapOf<File, E>()
+    private val entities = mutableMapOf<File, E>()
 
-    fun delete(element: E): Boolean {
+    private var serializers: TypeSerializerCollection? = null
+
+    abstract fun getFileName(identifier: I): String
+
+    override fun delete(element: E): Boolean {
         val file = entities.keys.find { entities[it] == element } ?: return false
         return deleteFile(file)
     }
 
-    fun getAll(): List<E> {
+    override fun getAll(): List<E> {
         return entities.values.toList()
     }
 
-    fun load(): List<E> {
+    override fun load(serializers: TypeSerializerCollection?): List<E> {
+        this.serializers = serializers
+
         if (!directory.toFile().exists()) {
             directory.toFile().mkdirs()
         }
 
         registerWatcher()
 
-        return Files.list(directory)
+        return Files.walk(directory)
             .toList()
             .filter { !it.toFile().isDirectory && it.toString().endsWith(".yml") }
             .mapNotNull { load(it.toFile()) }
     }
-
-    open fun watchUpdateEvent(file: File) {}
 
     private fun load(file: File): E? {
         try {
@@ -58,6 +62,7 @@ abstract class YamlDirectoryRepository<E>(
             if (existedBefore) {
                 return null
             }
+
             return null
         }
     }
@@ -68,12 +73,10 @@ abstract class YamlDirectoryRepository<E>(
         return deletedSuccessfully && removedSuccessfully
     }
 
-    fun save(fileName: String, entity: E) {
+    protected fun save(fileName: String, entity: E) {
         val file = directory.resolve(fileName).toFile()
         val loader = getOrCreateLoader(file)
-        val node = loader.createNode(ConfigurationOptions.defaults().serializers {
-            it.register(Enum::class.java, GenericEnumSerializer)
-        })
+        val node = loader.createNode(ConfigurationOptions.defaults())
         node.set(clazz, entity)
         loader.save(node)
         entities[file] = entity
@@ -84,11 +87,11 @@ abstract class YamlDirectoryRepository<E>(
             YamlConfigurationLoader.builder()
                 .path(file.toPath())
                 .nodeStyle(NodeStyle.BLOCK)
-                .nodeStyle(NodeStyle.BLOCK)
                 .defaultOptions { options ->
                     options.serializers { builder ->
+                        serializers?.let { builder.registerAll(it) }
+
                         builder.registerAnnotatedObjects(objectMapperFactory())
-                        builder.register(Enum::class.java, GenericEnumSerializer)
                     }
                 }.build()
         }
@@ -105,21 +108,19 @@ abstract class YamlDirectoryRepository<E>(
         return CoroutineScope(Dispatchers.IO).launch {
             while (isActive) {
                 val key = watchService.take()
-                for (event in key.pollEvents()) {
-                    val path = event.context() as? Path ?: continue
-                    val resolvedPath = directory.resolve(path)
-                    if (Files.isDirectory(resolvedPath) || !resolvedPath.toString().endsWith(".yml")) {
-                        continue
-                    }
-                    val kind = event.kind()
-                    when (kind) {
-                        StandardWatchEventKinds.ENTRY_CREATE -> {
-                            load(resolvedPath.toFile())
-                        }
 
+                key.pollEvents().forEach { event ->
+                    val path = event.context() as? Path ?: return@forEach
+                    if (!path.toString().endsWith(".yml")) return@forEach
+
+                    val resolvedPath = directory.resolve(path)
+                    if (Files.isDirectory(resolvedPath)) return@forEach
+
+                    when (event.kind()) {
+                        StandardWatchEventKinds.ENTRY_CREATE,
                         StandardWatchEventKinds.ENTRY_MODIFY -> {
+                            delay(100)
                             load(resolvedPath.toFile())
-                            watchUpdateEvent(resolvedPath.toFile())
                         }
 
                         StandardWatchEventKinds.ENTRY_DELETE -> {
@@ -127,30 +128,9 @@ abstract class YamlDirectoryRepository<E>(
                         }
                     }
                 }
+
                 key.reset()
             }
         }
     }
-
-    private object GenericEnumSerializer : TypeSerializer<Enum<*>> {
-        override fun deserialize(type: Type, node: ConfigurationNode): Enum<*> {
-            val value = node.string ?: throw SerializationException("No value present in node")
-
-            if (type !is Class<*> || !type.isEnum) {
-                throw SerializationException("Type is not an enum class")
-            }
-
-            @Suppress("UNCHECKED_CAST")
-            return try {
-                java.lang.Enum.valueOf(type as Class<out Enum<*>>, value)
-            } catch (e: IllegalArgumentException) {
-                throw SerializationException("Invalid enum constant")
-            }
-        }
-
-        override fun serialize(type: Type, obj: Enum<*>?, node: ConfigurationNode) {
-            node.set(obj?.name)
-        }
-    }
-
 }
