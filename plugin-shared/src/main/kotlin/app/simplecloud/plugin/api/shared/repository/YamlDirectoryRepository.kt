@@ -82,6 +82,8 @@ abstract class YamlDirectoryRepository<I, E>(
         entities[file] = entity
     }
 
+    open fun watchUpdateEvent(file: File) {}
+
     private fun getOrCreateLoader(file: File): YamlConfigurationLoader {
         return loaders.getOrPut(file) {
             YamlConfigurationLoader.builder()
@@ -92,6 +94,7 @@ abstract class YamlDirectoryRepository<I, E>(
                         serializers?.let { builder.registerAll(it) }
 
                         builder.registerAnnotatedObjects(objectMapperFactory())
+                        builder.register(Enum::class.java, GenericEnumSerializer)
                     }
                 }.build()
         }
