@@ -124,6 +124,7 @@ abstract class YamlDirectoryRepository<I, E>(
                         StandardWatchEventKinds.ENTRY_MODIFY -> {
                             delay(100)
                             load(resolvedPath.toFile())
+                            watchUpdateEvent(resolvedPath.toFile())
                         }
 
                         StandardWatchEventKinds.ENTRY_DELETE -> {
