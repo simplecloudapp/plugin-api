@@ -2,8 +2,9 @@ package app.simplecloud.plugin.api.shared.placeholder.provider
 
 import app.simplecloud.controller.api.ControllerApi
 import app.simplecloud.controller.shared.group.Group
-import app.simplecloud.plugin.api.shared.placeholder.argument.*
-import app.simplecloud.plugin.api.shared.placeholder.argument.group.*
+import app.simplecloud.plugin.api.shared.placeholder.argument.PropertiesArgumentsResolver
+import app.simplecloud.plugin.api.shared.placeholder.argument.group.PlayerCountArgumentsResolver
+import app.simplecloud.plugin.api.shared.placeholder.argument.group.ServerCountArgumentsResolver
 import app.simplecloud.plugin.api.shared.placeholder.single.SingleGroupPlaceholderExecutor
 
 /**

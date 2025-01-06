@@ -4,7 +4,6 @@ import kotlinx.coroutines.*
 import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.kotlin.objectMapperFactory
 import org.spongepowered.configurate.loader.ParsingException
-import org.spongepowered.configurate.serialize.TypeSerializerCollection
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 import java.io.File
@@ -22,8 +21,6 @@ abstract class YamlDirectoryRepository<I, E>(
     private val loaders = mutableMapOf<File, YamlConfigurationLoader>()
     private val entities = mutableMapOf<File, E>()
 
-    private var serializers: TypeSerializerCollection? = null
-
     abstract fun getFileName(identifier: I): String
 
     override fun delete(element: E): Boolean {
@@ -35,9 +32,7 @@ abstract class YamlDirectoryRepository<I, E>(
         return entities.values.toList()
     }
 
-    override fun load(serializers: TypeSerializerCollection?): List<E> {
-        this.serializers = serializers
-
+    override fun load(): List<E> {
         if (!directory.toFile().exists()) {
             directory.toFile().mkdirs()
         }
@@ -91,8 +86,6 @@ abstract class YamlDirectoryRepository<I, E>(
                 .nodeStyle(NodeStyle.BLOCK)
                 .defaultOptions { options ->
                     options.serializers { builder ->
-                        serializers?.let { builder.registerAll(it) }
-
                         builder.registerAnnotatedObjects(objectMapperFactory())
                         builder.register(Enum::class.java, GenericEnumSerializer)
                     }
