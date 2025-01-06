@@ -11,7 +11,7 @@ import app.simplecloud.plugin.api.shared.placeholder.async.AsyncPlaceholder
 class SingleGroupPlaceholderExecutor : SinglePlaceholderExecutor<Group> {
 
     override fun getAsyncPlaceholders(controllerApi: ControllerApi.Coroutine) = listOf<AsyncPlaceholder<Group>>(
-        AsyncPlaceholder("group_name") { it.name },
+        AsyncPlaceholder("name") { it.name },
         AsyncPlaceholder("type") { it.type },
         AsyncPlaceholder("max_players") { it.maxPlayers },
         AsyncPlaceholder("min_memory") { it.minMemory },
