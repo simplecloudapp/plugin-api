@@ -2,12 +2,14 @@ package app.simplecloud.plugin.api.shared.matcher
 
 import app.simplecloud.plugin.api.shared.matcher.operation.*
 
-enum class MatcherType(
+enum class OperationType(
     private val matcher: OperationMatcher
 ) {
 
     REGEX(RegexOperationMatcher),
+    PATTERN(PatternOperationMatcher),
     EQUALS(EqualsOperationMatcher),
+    NOT_EQUALS(NotEqualsOperationMatcher),
     CONTAINS(ContainsOperationMatcher),
     STARTS_WITH(StartsWithOperationMatcher),
     ENDS_WITH(EndsWithOperationMatcher);
