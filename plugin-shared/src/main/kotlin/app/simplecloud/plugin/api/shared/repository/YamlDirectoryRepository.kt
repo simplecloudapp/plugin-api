@@ -4,6 +4,7 @@ import kotlinx.coroutines.*
 import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.kotlin.objectMapperFactory
 import org.spongepowered.configurate.loader.ParsingException
+import org.spongepowered.configurate.serialize.TypeSerializerCollection
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 import java.io.File
@@ -79,6 +80,8 @@ abstract class YamlDirectoryRepository<I, E>(
 
     open fun watchUpdateEvent(file: File) {}
 
+    protected abstract fun addSerializers(builder: TypeSerializerCollection.Builder)
+
     private fun getOrCreateLoader(file: File): YamlConfigurationLoader {
         return loaders.getOrPut(file) {
             YamlConfigurationLoader.builder()
@@ -88,6 +91,7 @@ abstract class YamlDirectoryRepository<I, E>(
                     options.serializers { builder ->
                         builder.registerAnnotatedObjects(objectMapperFactory())
                         builder.register(Enum::class.java, GenericEnumSerializer)
+                        addSerializers(builder)
                     }
                 }.build()
         }
