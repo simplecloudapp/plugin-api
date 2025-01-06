@@ -9,7 +9,6 @@ enum class OperationType(
     REGEX(RegexOperationMatcher),
     PATTERN(PatternOperationMatcher),
     EQUALS(EqualsOperationMatcher),
-    NOT_EQUALS(NotEqualsOperationMatcher),
     CONTAINS(ContainsOperationMatcher),
     STARTS_WITH(StartsWithOperationMatcher),
     ENDS_WITH(EndsWithOperationMatcher);
