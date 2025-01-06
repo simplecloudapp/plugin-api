@@ -80,7 +80,7 @@ abstract class YamlDirectoryRepository<I, E>(
 
     open fun watchUpdateEvent(file: File) {}
 
-    protected abstract fun addSerializers(builder: TypeSerializerCollection.Builder)
+    protected open fun addSerializers(builder: TypeSerializerCollection.Builder) {}
 
     private fun getOrCreateLoader(file: File): YamlConfigurationLoader {
         return loaders.getOrPut(file) {
