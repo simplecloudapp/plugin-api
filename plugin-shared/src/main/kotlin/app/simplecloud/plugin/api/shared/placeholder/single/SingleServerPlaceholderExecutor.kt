@@ -21,7 +21,8 @@ class SingleServerPlaceholderExecutor : SinglePlaceholderExecutor<Server> {
         AsyncPlaceholder("online_players") { it.playerCount },
         AsyncPlaceholder("max_players") { it.maxPlayers },
         AsyncPlaceholder("min_memory") { it.minMemory },
-        AsyncPlaceholder("max_memory") { it.maxMemory }
+        AsyncPlaceholder("max_memory") { it.maxMemory },
+        AsyncPlaceholder("motd") { it.properties["motd"] ?: "A Minecraft server" }
     )
 
 }
