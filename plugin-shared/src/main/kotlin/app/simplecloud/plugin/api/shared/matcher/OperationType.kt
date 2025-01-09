@@ -1,9 +1,12 @@
 package app.simplecloud.plugin.api.shared.matcher
 
-import app.simplecloud.plugin.api.shared.matcher.operation.*
+import app.simplecloud.plugin.api.shared.matcher.operation.NumericOperationMatcher
+import app.simplecloud.plugin.api.shared.matcher.operation.OperationMatcher
+import app.simplecloud.plugin.api.shared.matcher.operation.StringOperationMatcher
+import app.simplecloud.plugin.api.shared.matcher.operation.impl.*
 
 enum class OperationType(
-    private val matcher: OperationMatcher
+    private val matcher: OperationMatcher<*, *>
 ) {
 
     REGEX(RegexOperationMatcher),
@@ -11,14 +14,27 @@ enum class OperationType(
     EQUALS(EqualsOperationMatcher),
     CONTAINS(ContainsOperationMatcher),
     STARTS_WITH(StartsWithOperationMatcher),
-    ENDS_WITH(EndsWithOperationMatcher);
+    ENDS_WITH(EndsWithOperationMatcher),
+    GREATER_THAN(GreaterThanOperationMatcher);
 
-    fun matches(name: String, value: String, negate: Boolean): Boolean {
-        val matches = this.matcher.matches(name, value)
-        if (negate) {
-            return matches.not()
+    fun matches(key: Any, value: Any, negate: Boolean): Boolean {
+        val matches = when (matcher) {
+            is StringOperationMatcher -> {
+                if (key is String && value is String) {
+                    matcher.matches(key, value)
+                } else false
+            }
+
+            is NumericOperationMatcher -> {
+                if (key is Int && value is Int) {
+                    matcher.matches(key, value)
+                } else false
+            }
+
+            else -> false
         }
-        return matches
+
+        return if (negate) matches.not() else matches
     }
 
     fun anyMatches(names: List<String>, value: String, negate: Boolean): Boolean {
