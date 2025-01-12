@@ -42,7 +42,8 @@ class ConfigFactory(
         } else {
             createDefaultConfig(defaultConfig)
         }
-        startWatching()
+
+        registerWatcher()
     }
 
     private fun createDefaultConfig(defaultConfig: Any) {
@@ -71,7 +72,7 @@ class ConfigFactory(
         }
     }
 
-    private fun startWatching() {
+    private fun registerWatcher(): Job {
         val watchService = FileSystems.getDefault().newWatchService()
         path.parent?.register(
             watchService,
@@ -79,7 +80,7 @@ class ConfigFactory(
             StandardWatchEventKinds.ENTRY_MODIFY
         )
 
-        watchJob = CoroutineScope(coroutineContext).launch {
+        return CoroutineScope(coroutineContext).launch {
             watchService.use { watchService ->
                 while (isActive) {
                     val key = watchService.take()
@@ -91,12 +92,9 @@ class ConfigFactory(
                     }
                 }
             }
-        }
+        }.also { watchJob = it }
     }
 
-    /**
-     * Handles a single watch event.
-     */
     private suspend fun handleWatchEvent(event: WatchEvent<*>) {
         val path = event.context() as? Path ?: return
         if (!file.name.contains(path.toString())) return
