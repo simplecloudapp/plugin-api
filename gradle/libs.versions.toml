@@ -10,12 +10,12 @@ kotlinJvm = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = 
 simpleCloudControllerApi = { module = "app.simplecloud.controller:controller-api", version.ref = "simpleCloudController" }
 simpleCloudControllerShared = { module = "app.simplecloud.controller:controller-shared", version.ref = "simpleCloudController" }
 
-adventureApi = { module = "net.kyori:adventure-api", version.ref = "adventure" }
+adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 adventureMiniMessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
 
 [bundles]
 simpleCloudController = ["simpleCloudControllerApi", "simpleCloudControllerShared"]
-adventure = ["adventureApi", "adventureMiniMessage"]
+adventure = ["adventure", "adventureMiniMessage"]
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
