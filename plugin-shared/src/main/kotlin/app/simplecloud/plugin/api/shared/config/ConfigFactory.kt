@@ -11,6 +11,19 @@ import java.io.File
 import java.nio.file.*
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * A configuration factory that loads, saves and watches configuration files.
+ * The factory automatically reloads the configuration when the file changes.
+ *
+ * Usage:
+ * ```
+ * // Using create
+ * val factory = ConfigFactory.create<MyConfig>(File("config.yaml"))
+ *
+ * // Using create with custom coroutineContext
+ * val factory = ConfigFactory.create<MyConfig>(File("config.json"), Dispatchers.Default)
+ * ```
+ */
 class ConfigFactory(
     private val file: File,
     private val configClass: Class<*>,
