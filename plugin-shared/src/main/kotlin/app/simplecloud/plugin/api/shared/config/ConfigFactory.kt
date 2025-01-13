@@ -24,13 +24,13 @@ import kotlin.coroutines.CoroutineContext
  * val factory = ConfigFactory.create<MyConfig>(File("config.json"), Dispatchers.Default)
  * ```
  */
-class ConfigFactory(
+class ConfigFactory<T>(
     private val file: File,
-    private val configClass: Class<*>,
+    private val configClass: Class<T>,
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) : AutoCloseable {
 
-    private var config: Any? = null
+    private var config: T? = null
     private val path: Path = file.toPath()
     private var watchJob: Job? = null
 
@@ -45,7 +45,7 @@ class ConfigFactory(
         }
         .build()
 
-    fun loadOrCreate(defaultConfig: Any) {
+    fun loadOrCreate(defaultConfig: T) {
         if (!configClass.isInstance(defaultConfig)) {
             throw IllegalArgumentException("Default config must be an instance of ${configClass.name}")
         }
@@ -59,7 +59,7 @@ class ConfigFactory(
         registerWatcher()
     }
 
-    private fun createDefaultConfig(defaultConfig: Any) {
+    private fun createDefaultConfig(defaultConfig: T) {
         path.parent?.let { Files.createDirectories(it) }
         Files.createFile(path)
 
@@ -70,8 +70,8 @@ class ConfigFactory(
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> getConfig(): T {
-        return config as? T ?: throw IllegalStateException("Configuration not loaded or invalid type")
+    fun getConfig(): T {
+        return config ?: throw IllegalStateException("Configuration not loaded or invalid type")
     }
 
     @Throws(ConfigurationException::class)
@@ -133,6 +133,6 @@ class ConfigFactory(
         inline fun <reified T : Any> create(
             file: File,
             coroutineContext: CoroutineContext = Dispatchers.IO
-        ): ConfigFactory = ConfigFactory(file, T::class.java, coroutineContext)
+        ): ConfigFactory<T> = ConfigFactory(file, T::class.java, coroutineContext)
     }
 }
