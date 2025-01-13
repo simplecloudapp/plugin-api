@@ -3,6 +3,7 @@ package app.simplecloud.plugin.api.shared.pattern
 import app.simplecloud.controller.api.ControllerApi
 import app.simplecloud.controller.shared.group.Group
 import app.simplecloud.controller.shared.server.Server
+import app.simplecloud.plugin.api.shared.pretty.StringPrettifier
 
 /**
  * @author Niklas Nieberler
@@ -42,6 +43,7 @@ class ServerPatternIdentifier(
     fun parseServerToPattern(server: Server): String {
         return this.pattern
             .replace("<group_name>", server.group)
+            .replace("<group_pretty_name>", server.properties["pretty-name"] ?: StringPrettifier.prettify(server.group))
             .replace("<id>", server.uniqueId)
             .replace("<unique_id>", server.uniqueId)
             .replace("<numerical_id>", server.numericalId.toString())
