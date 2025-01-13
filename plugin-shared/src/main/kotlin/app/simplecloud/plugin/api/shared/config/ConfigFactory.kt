@@ -69,7 +69,6 @@ class ConfigFactory<T>(
         config = defaultConfig
     }
 
-    @Suppress("UNCHECKED_CAST")
     fun getConfig(): T {
         return config ?: throw IllegalStateException("Configuration not loaded or invalid type")
     }
