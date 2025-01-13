@@ -28,7 +28,8 @@ subprojects {
     apply(plugin = "net.thebugmc.gradle.sonatype-central-portal-publisher")
 
     dependencies {
-        compileOnly(rootProject.libs.kotlinJvm)
+        testImplementation(rootProject.libs.kotlin.test)
+        compileOnly(rootProject.libs.kotlin.jvm)
         compileOnly(rootProject.libs.bundles.simpleCloudController)
         compileOnly(rootProject.libs.bundles.adventure)
     }
