@@ -6,7 +6,8 @@ plugins {
 
 val baseVersion = "0.0.1"
 val commitHash = System.getenv("COMMIT_HASH")
-val snapshotVersion = "${baseVersion}-dev.$commitHash"
+val timestamp = System.currentTimeMillis() // Temporary to be able to build and publish directly out of fix branch with same commit hash
+val snapshotVersion = "${baseVersion}-dev.${timestamp}-${commitHash}"
 
 allprojects {
     group = "app.simplecloud.plugin"
