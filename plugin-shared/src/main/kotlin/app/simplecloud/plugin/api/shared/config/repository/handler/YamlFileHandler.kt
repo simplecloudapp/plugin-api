@@ -35,6 +35,8 @@ class YamlFileHandler<T : Any>(
             val node = loader.load()
             node.get(clazz)
         } catch (e: Exception) {
+            println("Error loading file ${file.name}: ${e.message}")
+            e.printStackTrace()
             null
         }
     }

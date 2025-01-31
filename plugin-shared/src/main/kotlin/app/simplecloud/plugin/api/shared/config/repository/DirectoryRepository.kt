@@ -150,6 +150,7 @@ class DirectoryRepository<I : Any, T : Any> constructor(
         try {
             logger.info("Loading file ${file.name}")
             fileHandler.load(file)?.let { entity ->
+                logger.info("Reached First ${file.name}")
                 if (validateEntity(entity)) {
                     logger.info("Reached ${file.name}")
                     entities[file] = AtomicReference(entity)
