@@ -74,8 +74,6 @@ class DirectoryRepository<I : Any, T : Any> constructor(
         val targetDirectory = File(directory.toUri()).apply { mkdirs() }
         val last = directory.pathString.split('/').last()
 
-        logger.info("Loading repository from $last")
-
         val resourceUrl = DirectoryRepository::class.java.getResource("/$last") ?: run {
             logger.warn("$last folder not found in resources")
             return
@@ -129,7 +127,6 @@ class DirectoryRepository<I : Any, T : Any> constructor(
                                 }
                             }
                             filesProcessed++
-                            logger.info("Successfully extracted: ${entry.name}")
                             logger.debug("Successfully extracted: ${entry.name}")
                         } catch (e: Exception) {
                             filesFailed++
@@ -151,8 +148,10 @@ class DirectoryRepository<I : Any, T : Any> constructor(
 
     private fun loadFile(file: File) {
         try {
+            logger.info("Loading file ${file.name}")
             fileHandler.load(file)?.let { entity ->
                 if (validateEntity(entity)) {
+                    logger.info("Reached ${file.name}")
                     entities[file] = AtomicReference(entity)
                 }
             }
