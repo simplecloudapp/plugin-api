@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicReference
 import java.util.jar.JarFile
 import kotlin.coroutines.CoroutineContext
+import kotlin.io.path.pathString
 
 /**
  * A directory repository that manages files of a specific type.
@@ -68,8 +69,11 @@ class DirectoryRepository<I : Any, T : Any> constructor(
 
     private fun loadDefaultsFromResources(defaultEntities: Map<I, T>) {
         if (directory.toFile().list()?.isEmpty() == true) {
-            val resourceUrl = DirectoryRepository::class.java.getResource("/defaults/") ?: run {
-                println("Resource folder '/defaults/' not found.")
+
+            val last = directory.pathString.split('/').last()
+
+            val resourceUrl = DirectoryRepository::class.java.getResource("/$last") ?: run {
+                logger.warn("Resource folder '/$last' not found.")
                 return
             }
 
@@ -77,7 +81,7 @@ class DirectoryRepository<I : Any, T : Any> constructor(
                 "file" -> handleFileProtocol(resourceUrl, directory.toFile())
                 "jar" -> handleJarProtocol(resourceUrl, directory.toFile())
 
-                else -> println("Unsupported protocol: ${resourceUrl.protocol}")
+                else -> logger.warn("Unsupported protocol: ${resourceUrl.protocol}")
             }
 
             defaultEntities.forEach { (id, entity) -> save(id, entity) }
@@ -90,7 +94,7 @@ class DirectoryRepository<I : Any, T : Any> constructor(
         if (resourceDir.exists()) {
             resourceDir.copyRecursively(targetDirectory, overwrite = true)
         } else {
-            println("Resource directory does not exist: ${resourceUrl.path}")
+            logger.warn("Resource directory does not exist: ${resourceUrl.path}")
         }
     }
 
@@ -114,21 +118,20 @@ class DirectoryRepository<I : Any, T : Any> constructor(
                                 }
                             }
                         } catch (e: Exception) {
-                            println("Error copying file ${entry.name}: ${e.message}")
+                            logger.error("Error copying file ${entry.name}: ${e.message}")
                         }
                     }
             }
         } catch (e: Exception) {
-            println("Error processing JAR file: ${e.message}")
+            logger.error("Error processing JAR file: ${e.message}")
             e.printStackTrace()
         }
     }
 
-    private fun load() {
+    private fun load() =
         Files.walk(directory)
             .filter { !it.toFile().isDirectory && it.toString().endsWith(fileHandler.fileExtension) }
             .forEach { loadFile(it.toFile()) }
-    }
 
     private fun loadFile(file: File) {
         try {
