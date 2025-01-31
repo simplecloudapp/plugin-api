@@ -56,8 +56,8 @@ class DirectoryRepository<I : Any, T : Any> constructor(
     @Throws(RepositoryException::class)
     fun loadOrCreate(defaultEntities: Map<I, T> = emptyMap()) {
         try {
-            if (directory.toFile().list()?.isEmpty() != false) {
-                loadDefaultsFromResources(defaultEntities)
+            if (Files.newDirectoryStream(directory).use { it.none() }) {
+                loadFromResources(defaultEntities)
             }
 
             load()
@@ -67,25 +67,25 @@ class DirectoryRepository<I : Any, T : Any> constructor(
         }
     }
 
-    private fun loadDefaultsFromResources(defaultEntities: Map<I, T>) {
-        if (directory.toFile().list()?.isEmpty() == true) {
+    private fun loadFromResources(
+        defaultEntities: Map<I, T>,
+        writeBom: Boolean = true
+    ) {
+        val targetDirectory = File(directory.toUri()).apply { mkdirs() }
+        val last = directory.pathString.split('/').last()
 
-            val last = directory.pathString.split('/').last()
-
-            val resourceUrl = DirectoryRepository::class.java.getResource("/$last") ?: run {
-                logger.warn("Resource folder '/$last' not found.")
-                return
-            }
-
-            when (resourceUrl.protocol) {
-                "file" -> handleFileProtocol(resourceUrl, directory.toFile())
-                "jar" -> handleJarProtocol(resourceUrl, directory.toFile())
-
-                else -> logger.warn("Unsupported protocol: ${resourceUrl.protocol}")
-            }
-
-            defaultEntities.forEach { (id, entity) -> save(id, entity) }
+        val resourceUrl = DirectoryRepository::class.java.getResource("/$last") ?: run {
+            logger.warn("$last folder not found in resources")
+            return
         }
+
+        when (resourceUrl.protocol) {
+            "file" -> handleFileProtocol(resourceUrl, targetDirectory)
+            "jar" -> handleJarProtocol(resourceUrl, targetDirectory, writeBom)
+            else -> logger.error("Unsupported protocol: ${resourceUrl.protocol}")
+        }
+
+        defaultEntities.forEach { (id, entity) -> save(id, entity) }
     }
 
     private fun handleFileProtocol(resourceUrl: URL, targetDirectory: File) {
@@ -98,33 +98,46 @@ class DirectoryRepository<I : Any, T : Any> constructor(
         }
     }
 
-    private fun handleJarProtocol(resourceUrl: URL, targetDirectory: File) {
+    private fun handleJarProtocol(
+        resourceUrl: URL,
+        targetDirectory: File,
+        writeBom: Boolean
+    ) {
         val jarPath = resourceUrl.path.substringBefore("!").removePrefix("file:")
-
         try {
             JarFile(jarPath).use { jarFile ->
+                val last = directory.pathString.split('/').last()
+                var filesProcessed = 0
+                var filesFailed = 0
+
                 jarFile.entries().asSequence()
-                    .filter { it.name.startsWith("defaults/") && !it.isDirectory }
+                    .filter { it.name.startsWith("$last/") && !it.isDirectory }
                     .forEach { entry ->
-                        val targetFile = File(targetDirectory, entry.name.removePrefix("defaults/"))
+                        val targetFile = File(targetDirectory, entry.name.removePrefix("$last/"))
                         targetFile.parentFile.mkdirs()
                         try {
                             jarFile.getInputStream(entry).use { inputStream ->
                                 FileOutputStream(targetFile).use { fos ->
-                                    fos.write(0xEF)
-                                    fos.write(0xBB)
-                                    fos.write(0xBF)
+                                    if (writeBom) {
+                                        fos.write(0xEF)
+                                        fos.write(0xBB)
+                                        fos.write(0xBF)
+                                    }
                                     inputStream.copyTo(fos)
                                 }
                             }
+                            filesProcessed++
+                            logger.debug("Successfully extracted: ${entry.name}")
                         } catch (e: Exception) {
-                            logger.error("Error copying file ${entry.name}: ${e.message}")
+                            filesFailed++
+                            logger.error("Error copying file ${entry.name}")
                         }
                     }
+
+                logger.debug("Processed $filesProcessed files from JAR ($filesFailed failed)")
             }
         } catch (e: Exception) {
-            logger.error("Error processing JAR file: ${e.message}")
-            e.printStackTrace()
+            logger.error("Error processing JAR file")
         }
     }
 
