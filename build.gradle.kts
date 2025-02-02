@@ -87,10 +87,6 @@ subprojects {
 
         sign(publishing.publications)
     }
-
-    tasks.jar {
-        archiveVersion.set("")
-    }
 }
 
 fun determineVersion(): String {
