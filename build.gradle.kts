@@ -99,8 +99,15 @@ subprojects {
             return@signing
         }
 
+        if (hasProperty("signingPassphrase")) {
+            val signingKey: String? by project
+            val signingPassphrase: String? by project
+            useInMemoryPgpKeys(signingKey, signingPassphrase)
+        } else {
+            useGpgCmd()
+        }
+
         sign(publishing.publications)
-        useGpgCmd()
     }
 
     tasks.jar {
