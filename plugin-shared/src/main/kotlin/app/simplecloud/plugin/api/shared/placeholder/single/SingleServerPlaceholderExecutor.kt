@@ -1,7 +1,7 @@
 package app.simplecloud.plugin.api.shared.placeholder.single
 
-import app.simplecloud.controller.api.ControllerApi
-import app.simplecloud.controller.shared.server.Server
+import app.simplecloud.api.CloudApi
+import app.simplecloud.api.server.Server
 import app.simplecloud.plugin.api.shared.placeholder.async.AsyncPlaceholder
 import app.simplecloud.plugin.api.shared.pretty.StringPrettifier
 
@@ -11,14 +11,14 @@ import app.simplecloud.plugin.api.shared.pretty.StringPrettifier
 
 class SingleServerPlaceholderExecutor : SinglePlaceholderExecutor<Server> {
 
-    override fun getAsyncPlaceholders(controllerApi: ControllerApi.Coroutine) = listOf<AsyncPlaceholder<Server>>(
-        AsyncPlaceholder("id") { it.uniqueId },
+    override fun getAsyncPlaceholders(cloudApi: CloudApi) = listOf<AsyncPlaceholder<Server>>(
+        AsyncPlaceholder("id") { it.serverId },
         AsyncPlaceholder("numerical_id") { it.numericalId },
-        AsyncPlaceholder("group_name") { it.group },
+        AsyncPlaceholder("group_name") { it.serverBase.name },
         AsyncPlaceholder("group_pretty_name") {
-            it.properties["pretty-name"] ?: StringPrettifier.prettify(it.group)
+            it.properties["pretty-name"] ?: StringPrettifier.prettify(it.serverBase.name)
         },
-        AsyncPlaceholder("type") { it.type },
+        AsyncPlaceholder("type") { it.serverBase.type },
         AsyncPlaceholder("state") { it.state },
         AsyncPlaceholder("ip") { it.ip },
         AsyncPlaceholder("port") { it.port },

@@ -1,7 +1,7 @@
 package app.simplecloud.plugin.api.shared.extension
 
-import app.simplecloud.controller.shared.group.Group
-import app.simplecloud.controller.shared.server.Server
+import app.simplecloud.api.group.Group
+import app.simplecloud.api.server.Server
 import app.simplecloud.plugin.api.shared.placeholder.PlaceholderProvider
 import app.simplecloud.plugin.api.shared.placeholder.argument.ArgumentsResolver
 import net.kyori.adventure.text.Component

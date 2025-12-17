@@ -1,29 +1,21 @@
 package app.simplecloud.plugin.api.shared.pattern
 
-import app.simplecloud.controller.api.ControllerApi
-import app.simplecloud.controller.shared.group.Group
-import app.simplecloud.controller.shared.server.Server
+import app.simplecloud.api.CloudApi
+import app.simplecloud.api.group.Group
+import app.simplecloud.api.server.Server
 import app.simplecloud.plugin.api.shared.pretty.StringPrettifier
-
-/**
- * @author Niklas Nieberler
- */
+import kotlinx.coroutines.future.await
 
 class ServerPatternIdentifier(
     private val pattern: String = "<group_name>-<numerical_id>",
     regexPattern: String = pattern
         .replace("<group_name>", "(?<groupName>[a-zA-Z]+)")
         .replace("<numerical_id>", "(?<numericalId>\\d+)"),
-    private val controllerApi: ControllerApi.Coroutine = ControllerApi.createCoroutineApi()
+    private val cloudApi: CloudApi = CloudApi.create()
 ) {
 
     private val regex = Regex(regexPattern)
 
-    /**
-     * Gets the group and numerical id matching the [pattern] in a [Pair]
-     * @param name the server name
-     * @param customRegex custom regex pattern
-     */
     fun parse(name: String, customRegex: Regex? = null): Pair<String, Int> {
         val matchResult = customRegex?.matchEntire(name) ?: this.regex.matchEntire(name)
         if (matchResult == null)
@@ -36,32 +28,24 @@ class ServerPatternIdentifier(
         return Pair(groupName, numericalId)
     }
 
-    /**
-     * Gets a server string as a set in the pattern
-     * @param server replaces it to pattern
-     */
     fun parseServerToPattern(server: Server): String {
         return this.pattern
-            .replace("<group_name>", server.group)
-            .replace("<group_pretty_name>", server.properties["pretty-name"] ?: StringPrettifier.prettify(server.group))
-            .replace("<id>", server.uniqueId)
-            .replace("<unique_id>", server.uniqueId)
+            .replace("<group_name>", server.serverBase.name)
+            .replace("<group_pretty_name>", server.properties["pretty-name"]?.toString() ?: StringPrettifier.prettify(server.serverBase.name))
+            .replace("<id>", server.serverId)
+            .replace("<unique_id>", server.serverId)
             .replace("<numerical_id>", server.numericalId.toString())
     }
 
-    /**
-     * Gets the [Group] by the matching [pattern]
-     * @param name the server name
-     */
     suspend fun getGroup(name: String): Group? {
         val groupName = parse(name).first
-        return this.controllerApi.getGroups().getGroupByName(groupName)
+        return try {
+            this.cloudApi.group().getGroupByName(groupName).await()
+        } catch (e: Exception) {
+            null
+        }
     }
 
-    /**
-     * Gets the numerical id by the matching [pattern]
-     * @param name the server name
-     */
     fun getNumericalId(name: String): Int {
         return parse(name).second
     }

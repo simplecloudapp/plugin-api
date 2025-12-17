@@ -7,7 +7,7 @@ plugins {
 val baseVersion = "0.0.1"
 val commitHash = System.getenv("COMMIT_HASH")
 val timestamp = System.currentTimeMillis() // Temporary to be able to build and publish directly out of fix branch with same commit hash
-val snapshotVersion = "${baseVersion}-dev.${timestamp}-${commitHash}"
+val snapshotVersion = "${baseVersion}-platform.${timestamp}-${commitHash}"
 
 allprojects {
     group = "app.simplecloud.plugin"
@@ -19,7 +19,6 @@ allprojects {
         maven("https://libraries.minecraft.net")
         maven("https://buf.build/gen/maven")
         maven("https://repo.simplecloud.app/snapshots")
-        maven("https://buf.build/gen/maven")
         maven("https://repo.papermc.io/repository/maven-public")
     }
 }
@@ -31,8 +30,11 @@ subprojects {
     dependencies {
         testImplementation(rootProject.libs.kotlin.test)
         compileOnly(rootProject.libs.kotlin.jvm)
-        compileOnly(rootProject.libs.bundles.simpleCloudController)
+        compileOnly(rootProject.libs.kotlin.coroutines)
+        compileOnly(rootProject.libs.simplecloud.api)
         compileOnly(rootProject.libs.bundles.adventure)
+        compileOnly(rootProject.libs.bundles.configurate)
+        compileOnly(rootProject.libs.slf4j.api)
     }
 
     kotlin {

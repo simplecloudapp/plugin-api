@@ -1,6 +1,6 @@
 package app.simplecloud.plugin.api.shared.placeholder.provider
 
-import app.simplecloud.controller.api.ControllerApi
+import app.simplecloud.api.CloudApi
 import app.simplecloud.plugin.api.shared.extension.text
 import app.simplecloud.plugin.api.shared.placeholder.argument.ArgumentsResolver
 import app.simplecloud.plugin.api.shared.placeholder.single.SinglePlaceholderExecutor
@@ -16,15 +16,15 @@ abstract class AbstractPlaceholderProvider<T>(
     private val executor: SinglePlaceholderExecutor<T>,
 ) {
 
-    private val controllerApi = ControllerApi.createCoroutineApi()
+    private val cloudApi = CloudApi.create()
 
     /**
      * Gets the list of all available [ArgumentsResolver]
-     * @param controllerApi the instance of [ControllerApi.Coroutine]
+     * @param cloudApi the instance of [CloudApi]
      * @param value for the placeholder
      */
     abstract suspend fun getArgumentsResolvers(
-        controllerApi: ControllerApi.Coroutine,
+        cloudApi: CloudApi,
         value: T,
     ): List<ArgumentsResolver>
 
@@ -39,10 +39,10 @@ abstract class AbstractPlaceholderProvider<T>(
         vararg argumentsResolver: ArgumentsResolver,
     ): TagResolver {
         val availableArgumentsResolver = listOf(
-            *getArgumentsResolvers(this.controllerApi, value).toTypedArray(),
+            *getArgumentsResolvers(this.cloudApi, value).toTypedArray(),
             *argumentsResolver
         )
-        val singleTagResolver = this.executor.getTagResolver(this.controllerApi, value, prefix)
+        val singleTagResolver = this.executor.getTagResolver(this.cloudApi, value, prefix)
         return TagResolver.resolver(
             singleTagResolver,
             *availableArgumentsResolver
