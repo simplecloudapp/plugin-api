@@ -1,9 +1,13 @@
-package app.simplecloud.plugin.api.shared.repository
+package app.simplecloud.plugin.api.shared.config.serializer
 
 import org.spongepowered.configurate.ConfigurationNode
 import org.spongepowered.configurate.serialize.SerializationException
 import org.spongepowered.configurate.serialize.TypeSerializer
 import java.lang.reflect.Type
+
+/**
+ * @author Niklas Nieberler
+ */
 
 object GenericEnumSerializer : TypeSerializer<Enum<*>> {
 
@@ -11,13 +15,12 @@ object GenericEnumSerializer : TypeSerializer<Enum<*>> {
     override fun deserialize(type: Type, node: ConfigurationNode): Enum<*> {
         val value = node.string ?: throw SerializationException("No value present in node")
 
-        if (type !is Class<*> || !type.isEnum) {
+        if (type !is Class<*> || !type.isEnum)
             throw SerializationException("Type is not an enum class")
-        }
 
         return try {
             java.lang.Enum.valueOf(type as Class<out Enum<*>>, value)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             throw SerializationException("Invalid enum constant")
         }
     }
