@@ -1,6 +1,7 @@
 package app.simplecloud.plugin.api.shared.extension
 
 import app.simplecloud.api.group.Group
+import app.simplecloud.api.persistentserver.PersistentServer
 import app.simplecloud.api.server.Server
 import app.simplecloud.plugin.api.shared.placeholder.PlaceholderProvider
 import app.simplecloud.plugin.api.shared.placeholder.argument.ArgumentsResolver
@@ -32,4 +33,12 @@ suspend fun String.appendToComponent(
     vararg argumentsResolver: ArgumentsResolver
 ): Component {
     return PlaceholderProvider.groupPlaceholderProvider.append(group, this, prefix, *argumentsResolver)
+}
+
+suspend fun String.appendToComponent(
+    persistentServer: PersistentServer,
+    prefix: String? = null,
+    vararg argumentsResolver: ArgumentsResolver
+): Component {
+    return PlaceholderProvider.persistentServerPlaceholderProvider.append(persistentServer, this, prefix, *argumentsResolver)
 }

@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.1.0"
 kotlin-coroutines = "1.10.2"
-simplecloud-api = "0.1.0-platform.5-dev.1765910097897-3d59340"
+simplecloud-api = "0.1.0-platform.22-dev.1774376168759-1e20f57"
 sonatype-central-portal-publisher = "1.2.3"
 adventure = "4.18.0"
 configurate = "4.2.0"
