@@ -80,6 +80,8 @@ abstract class YamlDirectoryRepository<E, I>(
         delete(file)
     }
 
+    open fun watchUpdateEvent(file: File) {}
+
     private fun delete(file: File) {
         file.delete()
         this.cachedEntities.remove(file)
@@ -89,6 +91,7 @@ abstract class YamlDirectoryRepository<E, I>(
         ConfigurateWatcherRegistry()
             .withEvent(StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY) { load(it) }
             .withEvent(StandardWatchEventKinds.ENTRY_DELETE) { delete(it) }
+            .withEvent(StandardWatchEventKinds.ENTRY_MODIFY) { watchUpdateEvent(it) }
             .withWatcherRequirements { Files.isDirectory(it) }
             .register(this.directory)
     }
