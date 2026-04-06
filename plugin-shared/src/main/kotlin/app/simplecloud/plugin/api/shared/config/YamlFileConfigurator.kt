@@ -23,6 +23,7 @@ class YamlFileConfigurator<E>(
             options.serializers { builder ->
                 builder.registerAnnotatedObjects(objectMapperFactory())
                 builder.register(Enum::class.java, GenericEnumSerializer)
+                builder.register({ type -> type is Class<*> && type.isEnum }, GenericEnumSerializer)
             }
         }
 
