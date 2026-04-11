@@ -1,7 +1,6 @@
 package app.simplecloud.plugin.api.shared.config
 
 import app.simplecloud.plugin.api.shared.config.serializer.GenericEnumSerializer
-import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.kotlin.objectMapperFactory
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
@@ -29,14 +28,14 @@ class YamlFileConfigurator<E>(
 
     fun save(file: File, entity: E) {
         val configurationLoader = getOrCreateConfigurationLoader(file)
-        val node = configurationLoader.createNode(ConfigurationOptions.defaults())
+        val node = configurationLoader.createNode()
         node.set(this.javaClass, entity)
         configurationLoader.save(node)
     }
 
     fun load(file: File): E? {
         val configurationLoader = getOrCreateConfigurationLoader(file)
-        val node = configurationLoader.load(ConfigurationOptions.defaults())
+        val node = configurationLoader.load()
         return node.get(this.javaClass)
     }
 
