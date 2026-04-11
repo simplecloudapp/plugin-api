@@ -1,9 +1,14 @@
 [versions]
-kotlin = "2.1.0"
+kotlin = "2.2.20"
 kotlin-coroutines = "1.10.2"
-simplecloud-api = "0.1.0-platform.22-dev.1774376168759-1e20f57"
-sonatype-central-portal-publisher = "1.2.3"
-adventure = "4.18.0"
+
+sonatype-central-portal-publisher = "1.2.4"
+
+simplecloud-api = "0.1.0-platform.23-dev.1775473227066-1c0c25a"
+
+velocity = "3.5.0-SNAPSHOT"
+adventure = "4.26.1"
+
 configurate = "4.2.0"
 slf4j = "2.0.17"
 
@@ -13,6 +18,8 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
 
 simplecloud-api = { module = "app.simplecloud.api:api", version.ref = "simplecloud-api" }
+
+velocity-api = { module = "com.velocitypowered:velocity-api", version.ref = "velocity" }
 
 adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 adventure-minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
