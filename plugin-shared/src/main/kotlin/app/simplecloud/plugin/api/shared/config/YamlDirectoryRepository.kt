@@ -6,7 +6,6 @@ import java.nio.file.*
 /**
  * @author Niklas Nieberler
  */
-
 abstract class YamlDirectoryRepository<E, I>(
     private val directory: Path,
     javaClass: Class<E>
@@ -39,8 +38,6 @@ abstract class YamlDirectoryRepository<E, I>(
     fun load(): List<E> {
         if (!this.fileDirectory.exists())
             this.fileDirectory.mkdirs()
-
-        registerWatcher()
 
         return Files.walk(this.directory)
             .toList()
@@ -80,20 +77,8 @@ abstract class YamlDirectoryRepository<E, I>(
         delete(file)
     }
 
-    open fun watchUpdateEvent(file: File) {}
-
     private fun delete(file: File) {
         file.delete()
         this.cachedEntities.remove(file)
     }
-
-    private fun registerWatcher() {
-        ConfigurateWatcherRegistry()
-            .withEvent(StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY) { load(it) }
-            .withEvent(StandardWatchEventKinds.ENTRY_DELETE) { delete(it) }
-            .withEvent(StandardWatchEventKinds.ENTRY_MODIFY) { watchUpdateEvent(it) }
-            .withWatcherRequirements { Files.isDirectory(it) }
-            .register(this.directory)
-    }
-
 }
