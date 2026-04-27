@@ -6,7 +6,7 @@ import net.kyori.adventure.text.minimessage.tag.Tag
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 
 abstract class AbstractMessageConfig {
-    protected abstract val variables: Map<String, String>
+    abstract val variables: Map<String, String>
 
     private val resolver: TagResolver by lazy {
         TagResolver.resolver(
