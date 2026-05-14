@@ -6,12 +6,13 @@ import java.nio.file.*
 /**
  * @author Niklas Nieberler
  */
-abstract class YamlDirectoryRepository<E, I>(
+abstract class YamlDirectoryRepository<E, I> @JvmOverloads constructor(
     private val directory: Path,
-    javaClass: Class<E>
+    javaClass: Class<E>,
+    configMigrator: ConfigMigrator? = null,
 ) {
 
-    private val yamlFileConfigurator = YamlFileConfigurator(javaClass)
+    private val yamlFileConfigurator = YamlFileConfigurator(javaClass, configMigrator)
     private val fileDirectory = directory.toFile()
 
     private val cachedEntities = mutableMapOf<File, E>()

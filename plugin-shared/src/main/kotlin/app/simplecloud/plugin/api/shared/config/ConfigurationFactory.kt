@@ -6,12 +6,13 @@ import java.io.File
  * @author Niklas Nieberler
  */
 
-class ConfigurationFactory<E>(
+class ConfigurationFactory<E> @JvmOverloads constructor(
     private val file: File,
     javaClass: Class<E>,
+    configMigrator: ConfigMigrator? = null,
 ) {
 
-    private val yamlFileConfigurator = YamlFileConfigurator(javaClass)
+    private val yamlFileConfigurator = YamlFileConfigurator(javaClass, configMigrator)
 
     private var config: E? = null
 
@@ -22,7 +23,7 @@ class ConfigurationFactory<E>(
     fun loadOrCreate(defaultConfig: E): E {
         if (this.file.exists()) {
             return loadConfiguration()
-                ?: throw NullPointerException("failed to save config")
+                ?: throw NullPointerException("failed to load config")
         }
 
         this.yamlFileConfigurator.save(this.file, defaultConfig)
@@ -48,4 +49,7 @@ class ConfigurationFactory<E>(
         return configuration
     }
 
+    fun reload() {
+        loadConfiguration()
+    }
 }

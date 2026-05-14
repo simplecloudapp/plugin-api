@@ -10,10 +10,16 @@ import java.io.File
 /**
  * @author Niklas Nieberler
  */
-
-class YamlFileConfigurator<E>(
-    private val javaClass: Class<E>
+class YamlFileConfigurator<E> @JvmOverloads constructor(
+    private val javaClass: Class<E>,
+    private val configMigrator: ConfigMigrator? = null,
 ) {
+
+    init {
+        require(this.configMigrator == null || VersionedConfig::class.java.isAssignableFrom(this.javaClass)) {
+            "Config migrations can only be used with VersionedConfig types"
+        }
+    }
 
     private val configurationLoaders = hashMapOf<File, YamlConfigurationLoader>()
 
@@ -34,7 +40,10 @@ class YamlFileConfigurator<E>(
     }
 
     fun load(file: File): E? {
-        val (node, _) = buildNode(file)
+        val (node, loader) = buildNode(file)
+        if (migrate(node)) {
+            loader.save(node)
+        }
         return node.get(this.javaClass)
     }
 
@@ -49,6 +58,10 @@ class YamlFileConfigurator<E>(
                 .path(file.toPath())
                 .build()
         }
+    }
+
+    private fun migrate(node: CommentedConfigurationNode): Boolean {
+        return this.configMigrator?.migrate(node) ?: false
     }
 
 }
