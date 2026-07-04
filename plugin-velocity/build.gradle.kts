@@ -4,6 +4,6 @@ plugins {
 
 dependencies {
     compileOnly(project(":plugin-shared"))
-    compileOnly("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
-    kapt("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
+    compileOnly(libs.velocity.api)
+    kapt(libs.velocity.api)
 }

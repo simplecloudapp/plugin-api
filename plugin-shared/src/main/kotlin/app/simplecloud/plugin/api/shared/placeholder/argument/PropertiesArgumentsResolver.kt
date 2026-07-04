@@ -8,7 +8,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue
  */
 
 class PropertiesArgumentsResolver(
-    private val properties: Map<String, String>
+    private val properties: Map<String, Any>
 ) : ArgumentsResolver {
 
     override fun getKey() = "property"
@@ -17,7 +17,7 @@ class PropertiesArgumentsResolver(
         val argumentName = arguments.popOr("property expected").value()
         val defaultArgument = arguments.peek()?.value() ?: ""
         val string = this.properties[argumentName] ?: defaultArgument
-        return Tag.preProcessParsed(string)
+        return Tag.preProcessParsed(string.toString())
     }
 
 }

@@ -1,6 +1,6 @@
 package app.simplecloud.plugin.api.shared.placeholder.provider
 
-import app.simplecloud.controller.api.ControllerApi
+import app.simplecloud.api.CloudApi
 import app.simplecloud.plugin.api.shared.extension.text
 import app.simplecloud.plugin.api.shared.placeholder.argument.ArgumentsResolver
 import app.simplecloud.plugin.api.shared.placeholder.single.SinglePlaceholderExecutor
@@ -16,35 +16,35 @@ abstract class AbstractPlaceholderProvider<T>(
     private val executor: SinglePlaceholderExecutor<T>,
 ) {
 
-    private val controllerApi = ControllerApi.createCoroutineApi()
+    private val cloudApi = CloudApi.create()
 
     /**
      * Gets the list of all available [ArgumentsResolver]
-     * @param controllerApi the instance of [ControllerApi.Coroutine]
+     * @param cloudApi the instance of [CloudApi]
      * @param value for the placeholder
      */
     abstract suspend fun getArgumentsResolvers(
-        controllerApi: ControllerApi.Coroutine,
+        cloudApi: CloudApi,
         value: T,
     ): List<ArgumentsResolver>
 
     /**
      * Gets the sum of all [TagResolver]
-     * @param value for the placeholder
+     * @param values for the placeholder
      * @param prefix of the placeholder key
      */
     suspend fun getTagResolver(
-        value: T,
+        values: List<T>,
         prefix: String? = null,
         vararg argumentsResolver: ArgumentsResolver,
     ): TagResolver {
-        val availableArgumentsResolver = listOf(
-            *getArgumentsResolvers(this.controllerApi, value).toTypedArray(),
-            *argumentsResolver
-        )
-        val singleTagResolver = this.executor.getTagResolver(this.controllerApi, value, prefix)
+        val availableArgumentsResolver = buildList {
+            addAll(values.flatMap { getArgumentsResolvers(cloudApi, it) })
+            addAll(argumentsResolver)
+        }
+        val singleTagResolver = values.map { this.executor.getTagResolver(this.cloudApi, it, prefix) }
         return TagResolver.resolver(
-            singleTagResolver,
+            *singleTagResolver.toTypedArray(),
             *availableArgumentsResolver
                 .map { convertArgumentsResolverToTagResolver(it, prefix) }
                 .toTypedArray()
@@ -65,7 +65,25 @@ abstract class AbstractPlaceholderProvider<T>(
     ): Component {
         return text(
             string,
-            getTagResolver(value, prefix, *argumentsResolver),
+            getTagResolver(listOf(value), prefix, *argumentsResolver),
+        )
+    }
+
+    /**
+     * Serializes the string to a [Component]
+     * @param values for the placeholder
+     * @param string the message
+     * @param prefix of the placeholder key
+     */
+    suspend fun append(
+        values: List<T>,
+        string: String,
+        prefix: String? = null,
+        vararg argumentsResolver: ArgumentsResolver,
+    ): Component {
+        return text(
+            string,
+            getTagResolver(values, prefix, *argumentsResolver),
         )
     }
 

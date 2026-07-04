@@ -1,21 +1,15 @@
 package app.simplecloud.plugin.api.shared.placeholder.argument.group
 
-import app.simplecloud.controller.api.ControllerApi
-import app.simplecloud.controller.shared.group.Group
+import app.simplecloud.api.CloudApi
+import app.simplecloud.api.group.Group
+import app.simplecloud.api.server.ServerState
 import app.simplecloud.plugin.api.shared.placeholder.argument.ArgumentsResolver
-import build.buf.gen.simplecloud.controller.v1.ServerState
+import kotlinx.coroutines.future.await
 import net.kyori.adventure.text.minimessage.tag.Tag
 import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue
-import kotlin.collections.filter
-import kotlin.collections.firstOrNull
-import kotlin.collections.sumOf
-
-/**
- * @author Niklas Nieberler
- */
 
 class PlayerCountArgumentsResolver(
-    private val controllerApi: ControllerApi.Coroutine,
+    private val cloudApi: CloudApi,
     private val group: Group,
 ) : ArgumentsResolver {
 
@@ -27,10 +21,13 @@ class PlayerCountArgumentsResolver(
         return Tag.preProcessParsed(findPlayerCount(this.group, serverState).toString())
     }
 
-    private suspend fun findPlayerCount(group: Group, state: ServerState?): Long {
-        return this.controllerApi.getServers().getServersByGroup(group)
-            .filter { it.state == state }
-            .sumOf { it.playerCount }
+    private suspend fun findPlayerCount(group: Group, state: ServerState?): Int {
+        val servers = this.cloudApi.server().getServersByGroup(group.name).await()
+        return if (state != null) {
+            servers.filter { it.state == state }.sumOf { it.playerCount }
+        } else {
+            servers.sumOf { it.playerCount }
+        }
     }
 
 }
