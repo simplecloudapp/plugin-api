@@ -26,21 +26,25 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v6
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '25'
 
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}
+          cache-disabled: true
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+
+      - name: Build
+        run: ./gradlew clean build
+
+      - name: Publish to SimpleCloud Repository
+        run: ./gradlew publish
+        env:
+          SIMPLECLOUD_USERNAME: ${{ secrets.SIMPLECLOUD_USERNAME }}
+          SIMPLECLOUD_PASSWORD: ${{ secrets.SIMPLECLOUD_PASSWORD }}
 
       - name: Get Gradle Version
         id: gradle_version
@@ -50,23 +54,18 @@ jobs:
         id: commit_hash
         run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: Publish to SimpleCloud Repository
-        run: ./gradlew publishMavenJavaPublicationToSimplecloudRepository
-        env:
-          COMMIT_HASH: ${{ env.COMMIT_HASH }}
-          SIMPLECLOUD_USERNAME: ${{ secrets.SIMPLECLOUD_USERNAME }}
-          SIMPLECLOUD_PASSWORD: ${{ secrets.SIMPLECLOUD_PASSWORD }}
-
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: v${{ env.GRADLE_VERSION }}-dev.${{ env.COMMIT_HASH }}
-          release_name: v${{ env.GRADLE_VERSION }}-dev.${{ env.COMMIT_HASH }}
-          draft: false
-          prerelease: true
-          commitish: ${{ inputs.branch }}
-          body: |
-            This release contains dev builds for all Gradle modules.
+        run: |
+          jars=()
+          for jar in $(find . -type f -name "*.jar" -path "*/build/libs/*.jar" -not -path "./build/libs/*"); do
+            echo "Uploading $jar"
+            jars+=("$jar")
+          done
+          gh release create "v${GRADLE_VERSION}-dev.${COMMIT_HASH}" \
+            --target "${{ inputs.branch }}" \
+            --title "v${GRADLE_VERSION}-dev.${COMMIT_HASH}" \
+            --notes "This release contains dev builds for all Gradle modules." \
+            --prerelease \
+            "${jars[@]}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
