@@ -2,7 +2,6 @@ package app.simplecloud.plugin.api.shared.placeholder.single
 
 import app.simplecloud.api.CloudApi
 import app.simplecloud.api.persistentserver.PersistentServer
-import app.simplecloud.api.server.Server
 import app.simplecloud.plugin.api.shared.placeholder.async.AsyncPlaceholder
 import app.simplecloud.plugin.api.shared.pretty.StringPrettifier
 

@@ -6,6 +6,7 @@ import app.simplecloud.plugin.api.shared.placeholder.argument.ArgumentsResolver
 import app.simplecloud.plugin.api.shared.placeholder.single.SinglePlaceholderExecutor
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.tag.Tag
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 
 /**
@@ -91,7 +92,7 @@ abstract class AbstractPlaceholderProvider<T>(
         val key = resolver.getKey()
         val resolvedKey = prefix?.let { "${it}_$key" } ?: key
         return TagResolver.resolver(resolvedKey) { arguments, _ ->
-            return@resolver runBlocking { resolver.resolve(arguments) }
+            return@resolver runBlocking { resolver.resolve(arguments) as Tag }
         }
     }
 
