@@ -6,9 +6,14 @@ plugins {
     alias(libs.plugins.kotlin)
 }
 
+val baseVersion = "1.0.0"
+val commitHash = providers.exec {
+    commandLine("git", "rev-parse", "--short", "HEAD")
+}.standardOutput.asText.get().trim()
+
 allprojects {
     group = "app.simplecloud.plugin"
-    version = "1.0.0"
+    version = "$baseVersion-dev.$commitHash"
 
     repositories {
         mavenCentral()

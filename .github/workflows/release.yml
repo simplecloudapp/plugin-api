@@ -50,10 +50,6 @@ jobs:
         id: gradle_version
         run: echo "GRADLE_VERSION=$(./gradlew properties -q | grep "version:" | awk '{print $2}')" >> $GITHUB_ENV
 
-      - name: Get Commit Hash
-        id: commit_hash
-        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
       - name: Create Release
         run: |
           jars=()
@@ -61,9 +57,9 @@ jobs:
             echo "Uploading $jar"
             jars+=("$jar")
           done
-          gh release create "v${GRADLE_VERSION}-dev.${COMMIT_HASH}" \
+          gh release create "v${GRADLE_VERSION}" \
             --target "${{ inputs.branch }}" \
-            --title "v${GRADLE_VERSION}-dev.${COMMIT_HASH}" \
+            --title "v${GRADLE_VERSION}" \
             --notes "This release contains dev builds for all Gradle modules." \
             --prerelease \
             "${jars[@]}"
