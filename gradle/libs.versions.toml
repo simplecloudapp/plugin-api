@@ -2,15 +2,20 @@
 kotlin = "2.4.21"
 kotlinx-coroutines = "1.11.0"
 
-sonatype-central-portal-publisher = "1.2.4"
-
 simplecloud-api = "0.1.0-platform.58-dev.5.1-fe01ce5"
 
 velocity = "4.1.0-SNAPSHOT"
+bungeecord = "1.21-R0.4"
+paper = "26.3.build.+"
+
 adventure = "5.2.0"
+adventure-platform-bungeecord = "4.4.1"
 
 configurate = "4.2.0"
 slf4j = "2.0.20"
+
+cloud = "2.1.0"
+cloud-platform = "2.0.0"
 
 [libraries]
 kotlin-jvm = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
@@ -20,9 +25,12 @@ kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", 
 simplecloud-api = { module = "app.simplecloud.api:api", version.ref = "simplecloud-api" }
 
 velocity-api = { module = "com.velocitypowered:velocity-api", version.ref = "velocity" }
+bungeecord-api = { module = "net.md-5:bungeecord-api", version.ref = "bungeecord" }
+paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
 
 adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
-adventure-minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
+adventure-text-minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
+adventure-platform-bungeecord = { module = "net.kyori:adventure-platform-bungeecord", version.ref = "adventure-platform-bungeecord" }
 
 configurate-yaml = { module = "org.spongepowered:configurate-yaml", version.ref = "configurate" }
 configurate-gson = { module = "org.spongepowered:configurate-gson", version.ref = "configurate" }
@@ -30,10 +38,16 @@ configurate-extra-kotlin = { module = "org.spongepowered:configurate-extra-kotli
 
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 
+cloud-core = { module = "org.incendo:cloud-core", version.ref = "cloud" }
+cloud-coroutines = { module = "org.incendo:cloud-kotlin-coroutines", version.ref = "cloud" }
+cloud-velocity = { module = "org.incendo:cloud-velocity", version.ref = "cloud-platform" }
+cloud-bungee = { module = "org.incendo:cloud-bungee", version.ref = "cloud-platform" }
+cloud-paper = { module = "org.incendo:cloud-paper", version.ref = "cloud-platform" }
+
 [bundles]
-adventure = ["adventure", "adventure-minimessage"]
+adventure = ["adventure", "adventure-text-minimessage"]
 configurate = ["configurate-yaml", "configurate-gson", "configurate-extra-kotlin"]
+cloud = ["cloud-core", "cloud-coroutines"]
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-sonatype-central-portal-publisher = { id = "net.thebugmc.gradle.sonatype-central-portal-publisher", version.ref = "sonatype-central-portal-publisher" }
