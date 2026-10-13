@@ -7,6 +7,7 @@ simplecloud-api = "0.1.0-platform.58-dev.5.1-fe01ce5"
 velocity = "4.1.0-SNAPSHOT"
 bungeecord = "1.21-R0.4"
 paper = "26.3.build.+"
+minestom = "26_3-SNAPSHOT"
 
 adventure = "5.2.0"
 adventure-platform-bungeecord = "4.4.1"
@@ -16,6 +17,7 @@ slf4j = "2.0.20"
 
 cloud = "2.1.0"
 cloud-platform = "2.0.0"
+cloud-minestom = "2.2.0-SNAPSHOT"
 
 [libraries]
 kotlin-jvm = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
@@ -27,6 +29,7 @@ simplecloud-api = { module = "app.simplecloud.api:api", version.ref = "simpleclo
 velocity-api = { module = "com.velocitypowered:velocity-api", version.ref = "velocity" }
 bungeecord-api = { module = "net.md-5:bungeecord-api", version.ref = "bungeecord" }
 paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
+minestom = { module = "net.minestom:minestom", version.ref = "minestom" }
 
 adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 adventure-text-minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
@@ -43,6 +46,7 @@ cloud-coroutines = { module = "org.incendo:cloud-kotlin-coroutines", version.ref
 cloud-velocity = { module = "org.incendo:cloud-velocity", version.ref = "cloud-platform" }
 cloud-bungee = { module = "org.incendo:cloud-bungee", version.ref = "cloud-platform" }
 cloud-paper = { module = "org.incendo:cloud-paper", version.ref = "cloud-platform" }
+cloud-minestom = { module = "org.incendo:cloud-minestom", version.ref = "cloud-minestom" }
 
 [bundles]
 adventure = ["adventure", "adventure-text-minimessage"]

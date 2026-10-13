@@ -14,6 +14,7 @@ allprojects {
         mavenCentral()
         mavenLocal()
         maven("https://buf.build/gen/maven")
+        maven("https://repo.spectr.is/snapshots")
         maven("https://repo.simplecloud.app/snapshots")
         maven("https://repo.papermc.io/repository/maven-public")
     }

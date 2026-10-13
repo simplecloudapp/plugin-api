@@ -4,6 +4,7 @@ plugins {
 
 include(
     "plugin-bungeecord",
+    "plugin-minestom",
     "plugin-paper",
     "plugin-shared",
     "plugin-velocity"
