@@ -1,15 +1,14 @@
 package app.simplecloud.plugin.api.bungeecord.command
 
+import app.simplecloud.plugin.api.bungeecord.text.BungeeComponentConverter
 import app.simplecloud.plugin.api.shared.command.CloudSender
-import net.kyori.adventure.platform.bungeecord.BungeeAudiences
 import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import java.util.UUID
 
 class BungeeCloudSender(
-    private val commandSender: CommandSender,
-    private val audiences: BungeeAudiences
+    private val commandSender: CommandSender
 ) : CloudSender {
 
     fun getCommandSender(): CommandSender {
@@ -25,7 +24,7 @@ class BungeeCloudSender(
     }
 
     override fun sendMessage(message: Component) {
-        audiences.sender(commandSender).sendMessage(message)
+        commandSender.sendMessage(BungeeComponentConverter.toBungee(message))
     }
 
 }
