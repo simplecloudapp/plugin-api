@@ -1,7 +1,7 @@
 package app.simplecloud.plugin.api.shared.matcher.operation
 
-interface OperationMatcher {
+interface OperationMatcher<K, V> {
 
-    fun matches(name: String, value: String): Boolean
+    fun matches(key: K, value: V): Boolean
 
 }
