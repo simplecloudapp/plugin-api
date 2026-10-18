@@ -60,15 +60,16 @@ private constructor(
         private val migrations = mutableMapOf<Int, MigrationStep>()
 
         /** The version that is assumed if the config has no version node yet. Defaults to `0`. */
-        fun fallbackVersion(version: Int): Builder = apply {
+        fun fallbackVersion(version: Int): Builder {
             require(version >= 0) {
                 "The fallback version must be greater than or equal to 0"
             }
             fallbackVersion = version
+            return this
         }
 
         /** Registers a migration from [fromVersion] to [toVersion]. */
-        fun migrate(fromVersion: Int, toVersion: Int, action: ConfigMigration): Builder = apply {
+        fun migrate(fromVersion: Int, toVersion: Int, action: ConfigMigration): Builder {
             require(fromVersion >= 0) {
                 "The source config version must be greater than or equal to 0"
             }
@@ -83,6 +84,7 @@ private constructor(
             }
 
             migrations[fromVersion] = MigrationStep(toVersion, action)
+            return this
         }
 
         fun build(): ConfigMigrator =

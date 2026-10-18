@@ -25,7 +25,7 @@ data class AsyncPlaceholder<T>(val key: String, private val handler: AsyncPlaceh
      * @param prefix first name for the placeholder key
      */
     suspend fun invokeTagResolver(value: T, prefix: String? = null): TagResolver {
-        val resolvedKey = prefix?.let { "${it}_$key" } ?: this.key
+        val resolvedKey = if (prefix != null) "${prefix}_$key" else this.key
         return Placeholder.unparsed(resolvedKey, invoke(value).toString())
     }
 }

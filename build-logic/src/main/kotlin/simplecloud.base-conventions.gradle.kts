@@ -5,6 +5,7 @@ plugins {
     kotlin("jvm")
     id("com.gradleup.shadow")
     id("simplecloud.spotless-conventions")
+    id("simplecloud.detekt-conventions")
 }
 
 repositories {

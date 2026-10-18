@@ -33,7 +33,11 @@ class ConfigurationFactory<E>(private val file: File, javaClass: Class<E>, confi
         load()
     }
 
-    private fun load(): E? = configurator.load(file).also { config = it }
+    private fun load(): E? {
+        val loaded = configurator.load(file)
+        config = loaded
+        return loaded
+    }
 
     companion object {
 
@@ -51,9 +55,9 @@ class ConfigurationFactory<E>(private val file: File, javaClass: Class<E>, confi
         ): ConfigurationFactory<E> {
             val file = File(dataDirectory, fileName)
             DefaultConfigInstaller.install(file.toPath(), classLoader)
-            return ConfigurationFactory(file, E::class.java, migrator).also {
-                it.loadOrCreate(default)
-            }
+            val factory = ConfigurationFactory(file, E::class.java, migrator)
+            factory.loadOrCreate(default)
+            return factory
         }
 
         /** Same as [create] but with a [Path] as data directory. */

@@ -89,7 +89,7 @@ abstract class AbstractPlaceholderProvider<T>(private val executor: SinglePlaceh
         prefix: String?,
     ): TagResolver {
         val key = resolver.getKey()
-        val resolvedKey = prefix?.let { "${it}_$key" } ?: key
+        val resolvedKey = if (prefix != null) "${prefix}_$key" else key
         return TagResolver.resolver(resolvedKey) { arguments, _ ->
             return@resolver runBlocking { resolver.resolve(arguments) as Tag }
         }

@@ -1,0 +1,21 @@
+style:
+  ForbiddenMethodCall:
+    active: true
+    methods:
+      - 'kotlin.io.print'
+      - 'kotlin.io.println'
+      - 'java.math.BigDecimal.<init>(kotlin.Double)'
+      - 'java.math.BigDecimal.<init>(kotlin.String)'
+      - 'kotlin.system.measureTimeMillis'
+      - 'kotlin.apply'
+      - 'kotlin.also'
+      - 'kotlin.let'
+      - 'kotlin.run'
+      - 'kotlin.with'
+      - 'kotlin.takeIf'
+      - 'kotlin.takeUnless'
+  # formatting is handled by ktlint
+  MaxLineLength:
+    active: false
+  WildcardImport:
+    active: false
