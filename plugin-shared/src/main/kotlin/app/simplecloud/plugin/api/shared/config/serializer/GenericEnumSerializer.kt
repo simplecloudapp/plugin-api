@@ -8,15 +8,15 @@ import java.lang.reflect.Type
 /**
  * @author Niklas Nieberler
  */
-
 object GenericEnumSerializer : TypeSerializer<Enum<*>> {
 
     @Suppress("UNCHECKED_CAST")
     override fun deserialize(type: Type, node: ConfigurationNode): Enum<*> {
         val value = node.string ?: throw SerializationException("No value present in node")
 
-        if (type !is Class<*> || !type.isEnum)
+        if (type !is Class<*> || !type.isEnum) {
             throw SerializationException("Type is not an enum class")
+        }
 
         return try {
             java.lang.Enum.valueOf(type as Class<out Enum<*>>, value)

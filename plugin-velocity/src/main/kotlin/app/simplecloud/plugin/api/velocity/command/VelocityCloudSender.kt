@@ -12,8 +12,8 @@ class VelocityCloudSender(private val commandSource: CommandSource) : CloudSende
         return commandSource
     }
 
-    override fun getUniqueId(): UUID {
-        return (commandSource as? Player)?.uniqueId ?: UUID(0L, 0L)
+    override fun getUniqueId(): UUID? {
+        return (commandSource as? Player)?.uniqueId
     }
 
     override fun hasPermission(permission: String): Boolean {

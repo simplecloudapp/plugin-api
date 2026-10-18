@@ -1,55 +1,89 @@
 package app.simplecloud.plugin.api.shared.config
 
 import java.io.File
+import java.nio.file.Path
 
 /**
  * @author Niklas Nieberler
  */
-
-class ConfigurationFactory<E> @JvmOverloads constructor(
+class ConfigurationFactory<E>(
     private val file: File,
     javaClass: Class<E>,
     configMigrator: ConfigMigrator? = null,
 ) {
 
-    private val yamlFileConfigurator = YamlFileConfigurator(javaClass, configMigrator)
+    private val configurator = YamlFileConfigurator(javaClass, configMigrator)
 
     private var config: E? = null
 
     /**
-     * Loads the config and if it does not exist, it creates a default config
-     * @param defaultConfig the default configuration
+     * Loads the config, or creates the file from [defaultConfig] if it does not exist.
      */
     fun loadOrCreate(defaultConfig: E): E {
-        if (this.file.exists()) {
-            return loadConfiguration()
-                ?: throw NullPointerException("failed to load config")
+        if (file.exists()) {
+            return load() ?: throw NullPointerException("failed to load config")
         }
 
-        this.yamlFileConfigurator.save(this.file, defaultConfig)
-        this.config = defaultConfig
+        save(defaultConfig)
         return defaultConfig
     }
 
     /**
-     * Gets the cached config file
+     * The cached config. Throws if it has not been loaded yet.
      */
     fun get(): E {
-        return this.config ?: throw NullPointerException("failed to find config")
+        return config ?: throw NullPointerException("failed to find config")
     }
 
+    /**
+     * Writes the [entry] to the file and caches it.
+     */
     fun save(entry: E) {
-        this.yamlFileConfigurator.save(this.file, entry)
-        this.config = entry
+        configurator.save(file, entry)
+        config = entry
     }
 
-    private fun loadConfiguration(): E? {
-        val configuration = this.yamlFileConfigurator.load(this.file)
-        this.config = configuration
-        return configuration
-    }
-
+    /**
+     * Reloads the file into the cache.
+     */
     fun reload() {
-        loadConfiguration()
+        load()
+    }
+
+    private fun load(): E? {
+        return configurator.load(file).also { config = it }
+    }
+
+    companion object {
+
+        /**
+         * Installs the bundled default file if missing, creates the factory and loads the config.
+         *
+         * The bundled file is looked up by [fileName] with the class loader of the config class.
+         */
+        inline fun <reified E> create(
+            dataDirectory: File,
+            fileName: String,
+            default: E,
+            migrator: ConfigMigrator? = null,
+            classLoader: ClassLoader = E::class.java.classLoader,
+        ): ConfigurationFactory<E> {
+            val file = File(dataDirectory, fileName)
+            DefaultConfigInstaller.install(file.toPath(), classLoader)
+            return ConfigurationFactory(file, E::class.java, migrator).also { it.loadOrCreate(default) }
+        }
+
+        /**
+         * Same as [create] but with a [Path] as data directory.
+         */
+        inline fun <reified E> create(
+            dataDirectory: Path,
+            fileName: String,
+            default: E,
+            migrator: ConfigMigrator? = null,
+            classLoader: ClassLoader = E::class.java.classLoader,
+        ): ConfigurationFactory<E> {
+            return create(dataDirectory.toFile(), fileName, default, migrator, classLoader)
+        }
     }
 }

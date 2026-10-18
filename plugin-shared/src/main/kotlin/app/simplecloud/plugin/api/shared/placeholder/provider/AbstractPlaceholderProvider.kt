@@ -1,7 +1,7 @@
 package app.simplecloud.plugin.api.shared.placeholder.provider
 
 import app.simplecloud.api.CloudApi
-import app.simplecloud.plugin.api.shared.extension.text
+import app.simplecloud.plugin.api.shared.adventure.text
 import app.simplecloud.plugin.api.shared.placeholder.argument.ArgumentsResolver
 import app.simplecloud.plugin.api.shared.placeholder.single.SinglePlaceholderExecutor
 import kotlinx.coroutines.runBlocking

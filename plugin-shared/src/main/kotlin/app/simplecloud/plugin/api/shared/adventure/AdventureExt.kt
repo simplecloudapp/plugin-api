@@ -1,4 +1,4 @@
-package app.simplecloud.plugin.api.shared.extension
+package app.simplecloud.plugin.api.shared.adventure
 
 import app.simplecloud.api.group.Group
 import app.simplecloud.api.persistentserver.PersistentServer
@@ -7,16 +7,24 @@ import app.simplecloud.plugin.api.shared.placeholder.PlaceholderProvider
 import app.simplecloud.plugin.api.shared.placeholder.argument.ArgumentsResolver
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-
-/**
- * @author Niklas Nieberler
- */
 
 val miniMessage = MiniMessage.miniMessage()
 
+private val playerNameRegex = Regex("""^[^<>:'"\\\s]{1,32}$""")
+
 fun text(message: String, vararg tagResolver: TagResolver): Component {
     return miniMessage.deserialize(message, *tagResolver)
+}
+
+fun tags(vararg entries: Pair<String, Any?>): TagResolver {
+    return TagResolver.resolver(
+        entries.map { (key, value) ->
+            val text = value?.toString() ?: ""
+            if (key == "playername" && playerNameRegex.matches(text)) Placeholder.parsed(key, text) else Placeholder.unparsed(key, text)
+        }
+    )
 }
 
 suspend fun String.appendToComponent(

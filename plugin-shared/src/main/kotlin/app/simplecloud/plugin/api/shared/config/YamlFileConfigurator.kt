@@ -10,13 +10,13 @@ import java.io.File
 /**
  * @author Niklas Nieberler
  */
-class YamlFileConfigurator<E> @JvmOverloads constructor(
+class YamlFileConfigurator<E>(
     private val javaClass: Class<E>,
     private val configMigrator: ConfigMigrator? = null,
 ) {
 
     init {
-        require(this.configMigrator == null || VersionedConfig::class.java.isAssignableFrom(this.javaClass)) {
+        require(configMigrator == null || VersionedConfig::class.java.isAssignableFrom(javaClass)) {
             "Config migrations can only be used with VersionedConfig types"
         }
     }
@@ -33,35 +33,41 @@ class YamlFileConfigurator<E> @JvmOverloads constructor(
             }
         }
 
+    /**
+     * Writes the [entity] to the [file].
+     */
     fun save(file: File, entity: E) {
         val (node, loader) = buildNode(file)
-        node.set(this.javaClass, entity)
+        node.set(javaClass, entity)
         loader.save(node)
     }
 
+    /**
+     * Reads the [file], migrates it if needed and saves the migrated result.
+     */
     fun load(file: File): E? {
         val (node, loader) = buildNode(file)
-        if (migrate(node)) {
+        if (configMigrator?.migrate(node) == true) {
             loader.save(node)
         }
-        return node.get(this.javaClass)
+        return node.get(javaClass)
     }
 
+    /**
+     * Loads the raw node of the [file] together with its loader.
+     */
     fun buildNode(file: File): Pair<CommentedConfigurationNode, YamlConfigurationLoader> {
         val loader = getOrCreateConfigurationLoader(file)
-        return Pair(loader.load(), loader)
+        return loader.load() to loader
     }
 
+    /**
+     * The cached loader of the [file].
+     */
     fun getOrCreateConfigurationLoader(file: File): YamlConfigurationLoader {
-        return this.configurationLoaders.getOrPut(file) {
-            this.defaultConfigurationBuilder
-                .path(file.toPath())
-                .build()
+        return configurationLoaders.getOrPut(file) {
+            defaultConfigurationBuilder.path(file.toPath()).build()
         }
-    }
-
-    private fun migrate(node: CommentedConfigurationNode): Boolean {
-        return this.configMigrator?.migrate(node) ?: false
     }
 
 }

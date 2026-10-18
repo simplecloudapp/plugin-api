@@ -15,8 +15,8 @@ class BungeeCloudSender(
         return commandSender
     }
 
-    override fun getUniqueId(): UUID {
-        return (commandSender as? ProxiedPlayer)?.uniqueId ?: UUID(0L, 0L)
+    override fun getUniqueId(): UUID? {
+        return (commandSender as? ProxiedPlayer)?.uniqueId
     }
 
     override fun hasPermission(permission: String): Boolean {

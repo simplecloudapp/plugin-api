@@ -16,8 +16,8 @@ class MinestomCloudSender(
         return commandSender
     }
 
-    override fun getUniqueId(): UUID {
-        return (commandSender as? Player)?.uuid ?: UUID(0L, 0L)
+    override fun getUniqueId(): UUID? {
+        return (commandSender as? Player)?.uuid
     }
 
     override fun hasPermission(permission: String): Boolean {

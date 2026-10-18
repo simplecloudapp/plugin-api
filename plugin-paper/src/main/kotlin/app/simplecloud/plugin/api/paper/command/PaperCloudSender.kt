@@ -17,8 +17,8 @@ class PaperCloudSender(private val sourceStack: CommandSourceStack) : CloudSende
         return sourceStack.sender
     }
 
-    override fun getUniqueId(): UUID {
-        return (sourceStack.sender as? Player)?.uniqueId ?: UUID(0L, 0L)
+    override fun getUniqueId(): UUID? {
+        return (sourceStack.sender as? Player)?.uniqueId
     }
 
     override fun hasPermission(permission: String): Boolean {

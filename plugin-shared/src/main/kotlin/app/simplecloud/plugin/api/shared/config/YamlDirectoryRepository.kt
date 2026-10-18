@@ -1,85 +1,77 @@
 package app.simplecloud.plugin.api.shared.config
 
 import java.io.File
-import java.nio.file.*
+import java.nio.file.Files
+import java.nio.file.Path
 
 /**
  * @author Niklas Nieberler
  */
-abstract class YamlDirectoryRepository<E, I> @JvmOverloads constructor(
+abstract class YamlDirectoryRepository<E, I>(
     private val directory: Path,
     javaClass: Class<E>,
     configMigrator: ConfigMigrator? = null,
 ) {
 
-    private val yamlFileConfigurator = YamlFileConfigurator(javaClass, configMigrator)
-    private val fileDirectory = directory.toFile()
+    private val configurator = YamlFileConfigurator(javaClass, configMigrator)
 
     private val cachedEntities = mutableMapOf<File, E>()
 
     /**
-     * Saves an element to the file directory
-     * @param entity to save
+     * Saves the [entity] to the directory.
      */
     abstract fun save(entity: E)
 
+    /**
+     * Finds a cached entity by its [identifier].
+     */
     abstract fun find(identifier: I): E?
 
     /**
-     * Loads all cached entities from a directory
+     * All cached entities.
      */
     fun findAll(): List<E> {
-        return this.cachedEntities.values.toList()
+        return cachedEntities.values.toList()
     }
 
     /**
-     * Loads the yaml directory repository with all elements
-     * @return list of all file entities
+     * Loads all `.yml` and `.yaml` files of the directory and creates it if missing.
      */
     fun load(): List<E> {
-        if (!this.fileDirectory.exists())
-            this.fileDirectory.mkdirs()
+        Files.createDirectories(directory)
 
-        return Files.walk(this.directory)
-            .toList()
-            .map { it.toFile() }
-            .filter { it.name.endsWith(".yml") || it.name.endsWith(".yaml") }
-            .mapNotNull { load(it) }
+        return Files.walk(directory).use { paths ->
+            paths.toList()
+                .map { it.toFile() }
+                .filter { it.extension == "yml" || it.extension == "yaml" }
+                .mapNotNull { load(it) }
+        }
     }
 
     /**
-     * Loads an entity from a file
-     * @param file to load
+     * Loads and caches the entity of a single [file].
      */
     fun load(file: File): E? {
-        val entity = this.yamlFileConfigurator.load(file) ?: return null
-        this.cachedEntities[file] = entity
+        val entity = configurator.load(file) ?: return null
+        cachedEntities[file] = entity
         return entity
     }
 
     /**
-     * Saves an entity to the yaml formation
-     * @param name of the file
-     * @param entity to save
+     * Saves the [entity] to the file [name] inside the directory.
      */
     protected fun save(name: String, entity: E) {
-        val file = this.directory.resolve(name).toFile()
-        this.yamlFileConfigurator.save(file, entity)
-        this.cachedEntities[file] = entity
+        val file = directory.resolve(name).toFile()
+        configurator.save(file, entity)
+        cachedEntities[file] = entity
     }
 
     /**
-     * Deletes an entity file
-     * @param entity to delete
+     * Deletes the file of the [entity].
      */
     fun delete(entity: E) {
-        val file = this.cachedEntities.keys
-            .find { this.cachedEntities[it] == entity } ?: return
-        delete(file)
-    }
-
-    private fun delete(file: File) {
+        val file = cachedEntities.entries.find { it.value == entity }?.key ?: return
         file.delete()
-        this.cachedEntities.remove(file)
+        cachedEntities.remove(file)
     }
 }
