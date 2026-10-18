@@ -24,9 +24,7 @@ object DefaultConfigInstaller {
         classLoader: ClassLoader,
         resourcePrefix: String = "",
     ) {
-        val prefix =
-            if (resourcePrefix.isEmpty() || resourcePrefix.endsWith("/")) resourcePrefix
-            else "$resourcePrefix/"
+        val prefix = if (resourcePrefix.isEmpty() || resourcePrefix.endsWith("/")) resourcePrefix else "$resourcePrefix/"
         resources.forEach { resource ->
             copy(dataDirectory.resolve(resource), prefix + resource, classLoader)
         }

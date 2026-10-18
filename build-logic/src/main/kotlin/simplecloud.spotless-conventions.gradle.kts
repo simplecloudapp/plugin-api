@@ -2,14 +2,21 @@ plugins {
     id("com.diffplug.spotless")
 }
 
-val ktfmtVersion = "0.65"
+val ktlintVersion = "1.8.0"
+val ktlintEditorConfig = mapOf(
+    "ktlint_code_style" to "intellij_idea",
+    "max_line_length" to "120",
+    "ktlint_standard_function-signature" to "disabled",
+    "ktlint_standard_multiline-expression-wrapping" to "disabled",
+    "ktlint_standard_chain-method-continuation" to "disabled",
+)
 
 spotless {
     kotlin {
-        ktfmt(ktfmtVersion).kotlinlangStyle()
+        ktlint(ktlintVersion).editorConfigOverride(ktlintEditorConfig)
     }
 
     kotlinGradle {
-        ktfmt(ktfmtVersion).kotlinlangStyle()
+        ktlint(ktlintVersion).editorConfigOverride(ktlintEditorConfig)
     }
 }
