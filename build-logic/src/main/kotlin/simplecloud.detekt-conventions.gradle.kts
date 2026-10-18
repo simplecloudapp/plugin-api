@@ -2,15 +2,20 @@ plugins {
     id("dev.detekt")
 }
 
-val defaultConfig = resources.text.fromString(
-    checkNotNull(javaClass.getResource("/detekt/detekt.yml")) { "detekt.yml not found" }.readText(),
-)
+val defaultConfigText = checkNotNull(javaClass.getResource("/detekt/detekt.yml")) { "detekt.yml not found" }.readText()
 val projectConfig = rootProject.file("config/detekt/detekt.yml")
+
+val extractDetektConfig = tasks.register("extractDetektConfig") {
+    val output = layout.buildDirectory.file("detekt/detekt.yml")
+    inputs.property("config", defaultConfigText)
+    outputs.file(output)
+    doLast { output.get().asFile.writeText(defaultConfigText) }
+}
 
 detekt {
     buildUponDefaultConfig = true
     parallel = true
-    config.setFrom(provider { defaultConfig.asFile() })
+    config.setFrom(extractDetektConfig)
     if (projectConfig.exists()) {
         config.from(projectConfig)
     }
