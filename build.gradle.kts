@@ -7,13 +7,14 @@ plugins {
 }
 
 val baseVersion = "1.0.0"
+val isRelease = providers.gradleProperty("release").isPresent
 val commitHash = providers.exec {
     commandLine("git", "rev-parse", "--short", "HEAD")
 }.standardOutput.asText.get().trim()
 
 allprojects {
     group = "app.simplecloud.plugin"
-    version = "$baseVersion-dev.$commitHash"
+    version = if (isRelease) baseVersion else "$baseVersion-dev.$commitHash"
 
     repositories {
         mavenCentral()

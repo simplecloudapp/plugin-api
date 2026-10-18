@@ -1,27 +1,31 @@
 name: Release and Publish
 
 on:
+  push:
+    branches:
+      - main
+      - develop
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to build and publish'
-        required: true
-        default: 'develop'
-        type: choice
-        options:
-          - develop
-          - feat/platform
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
 
 jobs:
-  build:
+  release:
     name: Build and Publish
     runs-on: ubuntu-latest
+
+    env:
+      GRADLE_ARGS: ${{ github.ref_name == 'main' && '-Prelease' || '' }}
+      IS_RELEASE: ${{ github.ref_name == 'main' }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
-        with:
-          ref: ${{ inputs.branch }}
 
       - name: Set up JDK
         uses: actions/setup-java@v6
@@ -37,18 +41,17 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Get Gradle Version
+        run: echo "GRADLE_VERSION=$(./gradlew properties -q $GRADLE_ARGS | awk '/^version:/ {print $2}')" >> $GITHUB_ENV
+
       - name: Build
-        run: ./gradlew clean build
+        run: ./gradlew clean build $GRADLE_ARGS
 
       - name: Publish to SimpleCloud Repository
-        run: ./gradlew publish
+        run: ./gradlew publish $GRADLE_ARGS
         env:
           SIMPLECLOUD_USERNAME: ${{ secrets.SIMPLECLOUD_USERNAME }}
           SIMPLECLOUD_PASSWORD: ${{ secrets.SIMPLECLOUD_PASSWORD }}
-
-      - name: Get Gradle Version
-        id: gradle_version
-        run: echo "GRADLE_VERSION=$(./gradlew properties -q | grep "version:" | awk '{print $2}')" >> $GITHUB_ENV
 
       - name: Create Release
         run: |
@@ -57,11 +60,20 @@ jobs:
             echo "Uploading $jar"
             jars+=("$jar")
           done
+
+          if [ "$IS_RELEASE" = "true" ]; then
+            flags=()
+            notes="This release contains release builds for all Gradle modules."
+          else
+            flags=(--prerelease)
+            notes="This release contains dev builds for all Gradle modules."
+          fi
+
           gh release create "v${GRADLE_VERSION}" \
-            --target "${{ inputs.branch }}" \
+            --target "${{ github.sha }}" \
             --title "v${GRADLE_VERSION}" \
-            --notes "This release contains dev builds for all Gradle modules." \
-            --prerelease \
+            --notes "$notes" \
+            "${flags[@]}" \
             "${jars[@]}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
