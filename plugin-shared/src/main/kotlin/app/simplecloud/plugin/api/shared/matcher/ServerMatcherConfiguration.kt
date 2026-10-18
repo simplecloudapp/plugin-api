@@ -8,7 +8,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable
 
 @ConfigSerializable
 data class ServerMatcherConfiguration(
-    val operation: MatcherType = MatcherType.STARTS_WITH,
+    val operation: OperationType = OperationType.STARTS_WITH,
     val value: String = "",
     val negate: Boolean = false,
 ) {

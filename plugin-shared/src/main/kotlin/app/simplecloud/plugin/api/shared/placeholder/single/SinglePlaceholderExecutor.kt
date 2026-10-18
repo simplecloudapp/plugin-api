@@ -1,6 +1,6 @@
 package app.simplecloud.plugin.api.shared.placeholder.single
 
-import app.simplecloud.controller.api.ControllerApi
+import app.simplecloud.api.CloudApi
 import app.simplecloud.plugin.api.shared.placeholder.async.AsyncPlaceholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 
@@ -12,22 +12,22 @@ interface SinglePlaceholderExecutor<T> {
 
     /**
      * Gets a list with all available [AsyncPlaceholder]
-     * @param controllerApi the instance of [ControllerApi.Coroutine]
+     * @param cloudApi the instance of [app.simplecloud.api.CloudApi]
      */
-    fun getAsyncPlaceholders(controllerApi: ControllerApi.Coroutine): List<AsyncPlaceholder<T>>
+    fun getAsyncPlaceholders(cloudApi: CloudApi): List<AsyncPlaceholder<T>>
 
     /**
      * Gets a [TagResolver] with all available tag resolvers from the [getAsyncPlaceholders] method
-     * @param controllerApi the instance of [ControllerApi.Coroutine]
+     * @param cloudApi the instance of [CloudApi]
      * @param value for the placeholder
      * @param prefix first name for the placeholder key
      */
     suspend fun getTagResolver(
-        controllerApi: ControllerApi.Coroutine,
+        cloudApi: CloudApi,
         value: T,
         prefix: String? = null,
     ): TagResolver {
-        return TagResolver.resolver(getAsyncPlaceholders(controllerApi)
+        return TagResolver.resolver(getAsyncPlaceholders(cloudApi)
             .map { it.invokeTagResolver(value, prefix) })
     }
 
