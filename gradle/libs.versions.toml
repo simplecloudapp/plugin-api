@@ -18,6 +18,8 @@ cloud = "2.1.0"
 cloud-platform = "2.0.0"
 cloud-minestom = "2.2.0-SNAPSHOT"
 
+shadow = "9.6.1"
+
 [libraries]
 kotlin-jvm = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -46,6 +48,9 @@ cloud-velocity = { module = "org.incendo:cloud-velocity", version.ref = "cloud-p
 cloud-bungee = { module = "org.incendo:cloud-bungee", version.ref = "cloud-platform" }
 cloud-paper = { module = "org.incendo:cloud-paper", version.ref = "cloud-platform" }
 cloud-minestom = { module = "org.incendo:cloud-minestom", version.ref = "cloud-minestom" }
+
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+shadow-gradle-plugin = { module = "com.gradleup.shadow:shadow-gradle-plugin", version.ref = "shadow" }
 
 [bundles]
 adventure = ["adventure", "adventure-text-minimessage"]
