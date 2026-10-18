@@ -8,10 +8,7 @@ import kotlinx.coroutines.future.await
 import net.kyori.adventure.text.minimessage.tag.Tag
 import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue
 
-class ServerCountArgumentsResolver(
-    private val cloudApi: CloudApi,
-    private val group: Group,
-) : ArgumentsResolver {
+class ServerCountArgumentsResolver(private val cloudApi: CloudApi, private val group: Group) : ArgumentsResolver {
 
     override fun getKey() = "server_count"
 

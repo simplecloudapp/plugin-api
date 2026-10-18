@@ -4,7 +4,5 @@ import app.simplecloud.plugin.api.shared.matcher.operation.NumericOperationMatch
 
 object GreaterThanOperationMatcher : NumericOperationMatcher {
 
-    override fun matches(key: Int, value: Int): Boolean {
-        return key > value
-    }
+    override fun matches(key: Int, value: Int): Boolean = key > value
 }

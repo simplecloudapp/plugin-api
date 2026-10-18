@@ -54,9 +54,7 @@ private constructor(
     }
 
     class Builder
-    internal constructor(
-        private val currentVersion: Int,
-    ) {
+    internal constructor(private val currentVersion: Int) {
 
         private var fallbackVersion = 0
         private val migrations = mutableMapOf<Int, MigrationStep>()
@@ -95,10 +93,7 @@ private constructor(
             )
     }
 
-    private data class MigrationStep(
-        val toVersion: Int,
-        val action: ConfigMigration,
-    )
+    private data class MigrationStep(val toVersion: Int, val action: ConfigMigration)
 
     companion object {
         const val VERSION_NODE = "version"

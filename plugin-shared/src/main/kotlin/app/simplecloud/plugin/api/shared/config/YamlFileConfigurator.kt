@@ -1,17 +1,13 @@
 package app.simplecloud.plugin.api.shared.config
 
 import app.simplecloud.plugin.api.shared.config.serializer.GenericEnumSerializer
-import java.io.File
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.kotlin.objectMapperFactory
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
+import java.io.File
 
-/** @author Niklas Nieberler */
-class YamlFileConfigurator<E>(
-    private val javaClass: Class<E>,
-    private val configMigrator: ConfigMigrator? = null,
-) {
+class YamlFileConfigurator<E>(private val javaClass: Class<E>, private val configMigrator: ConfigMigrator? = null) {
 
     init {
         require(configMigrator == null || VersionedConfig::class.java.isAssignableFrom(javaClass)) {
@@ -53,9 +49,7 @@ class YamlFileConfigurator<E>(
     }
 
     /** The cached loader of the [file]. */
-    fun getOrCreateConfigurationLoader(file: File): YamlConfigurationLoader {
-        return configurationLoaders.getOrPut(file) {
-            defaultConfigurationBuilder.path(file.toPath()).build()
-        }
+    fun getOrCreateConfigurationLoader(file: File): YamlConfigurationLoader = configurationLoaders.getOrPut(file) {
+        defaultConfigurationBuilder.path(file.toPath()).build()
     }
 }

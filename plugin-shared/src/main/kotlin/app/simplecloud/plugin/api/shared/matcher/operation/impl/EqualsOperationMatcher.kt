@@ -6,7 +6,5 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable
 @ConfigSerializable
 object EqualsOperationMatcher : StringOperationMatcher {
 
-    override fun matches(key: String, value: String): Boolean {
-        return key.equals(value, ignoreCase = true)
-    }
+    override fun matches(key: String, value: String): Boolean = key.equals(value, ignoreCase = true)
 }

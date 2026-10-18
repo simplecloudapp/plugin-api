@@ -3,12 +3,7 @@ package app.simplecloud.plugin.api.shared.config
 import java.io.File
 import java.nio.file.Path
 
-/** @author Niklas Nieberler */
-class ConfigurationFactory<E>(
-    private val file: File,
-    javaClass: Class<E>,
-    configMigrator: ConfigMigrator? = null,
-) {
+class ConfigurationFactory<E>(private val file: File, javaClass: Class<E>, configMigrator: ConfigMigrator? = null) {
 
     private val configurator = YamlFileConfigurator(javaClass, configMigrator)
 
@@ -25,9 +20,7 @@ class ConfigurationFactory<E>(
     }
 
     /** The cached config. Throws if it has not been loaded yet. */
-    fun get(): E {
-        return config ?: throw NullPointerException("failed to find config")
-    }
+    fun get(): E = config ?: throw NullPointerException("failed to find config")
 
     /** Writes the [entry] to the file and caches it. */
     fun save(entry: E) {
@@ -40,9 +33,7 @@ class ConfigurationFactory<E>(
         load()
     }
 
-    private fun load(): E? {
-        return configurator.load(file).also { config = it }
-    }
+    private fun load(): E? = configurator.load(file).also { config = it }
 
     companion object {
 
@@ -72,8 +63,6 @@ class ConfigurationFactory<E>(
             default: E,
             migrator: ConfigMigrator? = null,
             classLoader: ClassLoader = E::class.java.classLoader,
-        ): ConfigurationFactory<E> {
-            return create(dataDirectory.toFile(), fileName, default, migrator, classLoader)
-        }
+        ): ConfigurationFactory<E> = create(dataDirectory.toFile(), fileName, default, migrator, classLoader)
     }
 }

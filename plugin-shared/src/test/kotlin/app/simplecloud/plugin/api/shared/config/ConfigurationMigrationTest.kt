@@ -1,12 +1,12 @@
 package app.simplecloud.plugin.api.shared.config
 
+import org.spongepowered.configurate.objectmapping.ConfigSerializable
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import org.spongepowered.configurate.objectmapping.ConfigSerializable
 
 class ConfigurationMigrationTest {
 
@@ -92,10 +92,7 @@ class ConfigurationMigrationTest {
         var enabled: Boolean = true
     }
 
-    private class TestYamlDirectoryRepository(
-        directory: Path,
-        configMigrator: ConfigMigrator,
-    ) :
+    private class TestYamlDirectoryRepository(directory: Path, configMigrator: ConfigMigrator) :
         YamlDirectoryRepository<TestVersionedConfig, String>(
             directory = directory,
             javaClass = TestVersionedConfig::class.java,
@@ -106,8 +103,6 @@ class ConfigurationMigrationTest {
             save("${entity.message}.yml", entity)
         }
 
-        override fun find(identifier: String): TestVersionedConfig? {
-            return findAll().firstOrNull { it.message == identifier }
-        }
+        override fun find(identifier: String): TestVersionedConfig? = findAll().firstOrNull { it.message == identifier }
     }
 }

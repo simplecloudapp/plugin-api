@@ -1,6 +1,5 @@
 package app.simplecloud.plugin.api.shared.placeholder.async
 
-/** @author Niklas Nieberler */
 fun interface AsyncPlaceholderHandler<T> {
 
     /**

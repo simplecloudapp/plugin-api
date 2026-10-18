@@ -4,7 +4,6 @@ import app.simplecloud.api.CloudApi
 import app.simplecloud.plugin.api.shared.placeholder.async.AsyncPlaceholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 
-/** @author Niklas Nieberler */
 interface SinglePlaceholderExecutor<T> {
 
     /**
@@ -25,9 +24,7 @@ interface SinglePlaceholderExecutor<T> {
         cloudApi: CloudApi,
         value: T,
         prefix: String? = null,
-    ): TagResolver {
-        return TagResolver.resolver(
-            getAsyncPlaceholders(cloudApi).map { it.invokeTagResolver(value, prefix) },
-        )
-    }
+    ): TagResolver = TagResolver.resolver(
+        getAsyncPlaceholders(cloudApi).map { it.invokeTagResolver(value, prefix) },
+    )
 }

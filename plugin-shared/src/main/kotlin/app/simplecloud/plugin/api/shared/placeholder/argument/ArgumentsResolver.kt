@@ -3,7 +3,6 @@ package app.simplecloud.plugin.api.shared.placeholder.argument
 import net.kyori.adventure.text.minimessage.tag.Tag
 import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue
 
-/** @author Niklas Nieberler */
 interface ArgumentsResolver {
 
     /** Gets the key for the placeholder */

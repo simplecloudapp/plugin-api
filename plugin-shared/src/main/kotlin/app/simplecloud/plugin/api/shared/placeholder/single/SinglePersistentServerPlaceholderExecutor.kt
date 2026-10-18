@@ -5,7 +5,6 @@ import app.simplecloud.api.persistentserver.PersistentServer
 import app.simplecloud.plugin.api.shared.placeholder.async.AsyncPlaceholder
 import app.simplecloud.plugin.api.shared.pretty.StringPrettifier
 
-/** @author Niklas Nieberler */
 class SinglePersistentServerPlaceholderExecutor : SinglePlaceholderExecutor<PersistentServer> {
 
     override fun getAsyncPlaceholders(cloudApi: CloudApi) =

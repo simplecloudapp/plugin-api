@@ -9,10 +9,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.Tag
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 
-/** @author Niklas Nieberler */
-abstract class AbstractPlaceholderProvider<T>(
-    private val executor: SinglePlaceholderExecutor<T>,
-) {
+abstract class AbstractPlaceholderProvider<T>(private val executor: SinglePlaceholderExecutor<T>) {
 
     private val cloudApi = CloudApi.create()
 
@@ -65,12 +62,10 @@ abstract class AbstractPlaceholderProvider<T>(
         string: String,
         prefix: String? = null,
         vararg argumentsResolver: ArgumentsResolver,
-    ): Component {
-        return text(
-            string,
-            getTagResolver(listOf(value), prefix, *argumentsResolver),
-        )
-    }
+    ): Component = text(
+        string,
+        getTagResolver(listOf(value), prefix, *argumentsResolver),
+    )
 
     /**
      * Serializes the string to a [Component]
@@ -84,12 +79,10 @@ abstract class AbstractPlaceholderProvider<T>(
         string: String,
         prefix: String? = null,
         vararg argumentsResolver: ArgumentsResolver,
-    ): Component {
-        return text(
-            string,
-            getTagResolver(values, prefix, *argumentsResolver),
-        )
-    }
+    ): Component = text(
+        string,
+        getTagResolver(values, prefix, *argumentsResolver),
+    )
 
     private fun convertArgumentsResolverToTagResolver(
         resolver: ArgumentsResolver,

@@ -4,7 +4,6 @@ import app.simplecloud.plugin.api.shared.placeholder.provider.GroupPlaceholderPr
 import app.simplecloud.plugin.api.shared.placeholder.provider.PersistentServerPlaceholderProvider
 import app.simplecloud.plugin.api.shared.placeholder.provider.ServerPlaceholderProvider
 
-/** @author Niklas Nieberler */
 object PlaceholderProvider {
 
     val serverPlaceholderProvider = ServerPlaceholderProvider()

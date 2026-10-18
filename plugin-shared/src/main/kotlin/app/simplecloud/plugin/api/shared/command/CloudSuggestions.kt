@@ -18,27 +18,27 @@ object CloudSuggestions {
     /** Suggests the names of all groups. */
     fun <C : Any> groups(api: CloudApi): SuggestionProvider<C> =
         SuspendingSuggestionProvider<C> { _, _ ->
-                try {
-                    api.group().allGroups.await().map { Suggestion.suggestion(it.name) }
-                } catch (_: Exception) {
-                    emptyList()
-                }
+            try {
+                api.group().allGroups.await().map { Suggestion.suggestion(it.name) }
+            } catch (_: Exception) {
+                emptyList()
             }
+        }
             .asSuggestionProvider()
 
     /** Suggests the names of all groups of the given [type]. */
     fun <C : Any> groups(api: CloudApi, type: GroupServerType): SuggestionProvider<C> =
         SuspendingSuggestionProvider<C> { _, _ ->
-                try {
-                    api.group()
-                        .allGroups
-                        .await()
-                        .filter { it.type == type }
-                        .map { Suggestion.suggestion(it.name) }
-                } catch (_: Exception) {
-                    emptyList()
-                }
+            try {
+                api.group()
+                    .allGroups
+                    .await()
+                    .filter { it.type == type }
+                    .map { Suggestion.suggestion(it.name) }
+            } catch (_: Exception) {
+                emptyList()
             }
+        }
             .asSuggestionProvider()
 
     /** Suggests the names of all proxy groups. */
@@ -55,49 +55,49 @@ object CloudSuggestions {
      */
     fun <C : Any> serverIds(api: CloudApi, groupArgument: String = "group"): SuggestionProvider<C> =
         SuspendingSuggestionProvider<C> { context, _ ->
-                try {
-                    val group = context.get<String>(groupArgument)
-                    api.server()
-                        .getServersByGroup(group)
-                        .await()
-                        .sortedBy { it.numericalId }
-                        .map { Suggestion.suggestion(it.numericalId.toString()) }
-                } catch (_: Exception) {
-                    emptyList()
-                }
+            try {
+                val group = context.get<String>(groupArgument)
+                api.server()
+                    .getServersByGroup(group)
+                    .await()
+                    .sortedBy { it.numericalId }
+                    .map { Suggestion.suggestion(it.numericalId.toString()) }
+            } catch (_: Exception) {
+                emptyList()
             }
+        }
             .asSuggestionProvider()
 
     /** Suggests the names of all running servers. */
     fun <C : Any> servers(api: CloudApi): SuggestionProvider<C> =
         SuspendingSuggestionProvider<C> { _, _ ->
-                try {
-                    api.server()
-                        .allServers
-                        .await()
-                        .mapNotNull { serverName(it) }
-                        .map { Suggestion.suggestion(it) }
-                } catch (_: Exception) {
-                    emptyList()
-                }
+            try {
+                api.server()
+                    .allServers
+                    .await()
+                    .mapNotNull { serverName(it) }
+                    .map { Suggestion.suggestion(it) }
+            } catch (_: Exception) {
+                emptyList()
             }
+        }
             .asSuggestionProvider()
 
     /** Suggests the names of all running servers in one of the given [states]. */
     fun <C : Any> servers(api: CloudApi, vararg states: ServerState): SuggestionProvider<C> {
         val stateSet = states.toSet()
         return SuspendingSuggestionProvider<C> { _, _ ->
-                try {
-                    api.server()
-                        .allServers
-                        .await()
-                        .filter { it.state in stateSet }
-                        .mapNotNull { serverName(it) }
-                        .map { Suggestion.suggestion(it) }
-                } catch (_: Exception) {
-                    emptyList()
-                }
+            try {
+                api.server()
+                    .allServers
+                    .await()
+                    .filter { it.state in stateSet }
+                    .mapNotNull { serverName(it) }
+                    .map { Suggestion.suggestion(it) }
+            } catch (_: Exception) {
+                emptyList()
             }
+        }
             .asSuggestionProvider()
     }
 
@@ -108,47 +108,45 @@ object CloudSuggestions {
     /** Suggests the names of all persistent servers. */
     fun <C : Any> persistentServers(api: CloudApi): SuggestionProvider<C> =
         SuspendingSuggestionProvider<C> { _, _ ->
-                try {
-                    api.persistentServer().allPersistentServers.await().map {
-                        Suggestion.suggestion(it.name)
-                    }
-                } catch (_: Exception) {
-                    emptyList()
+            try {
+                api.persistentServer().allPersistentServers.await().map {
+                    Suggestion.suggestion(it.name)
                 }
+            } catch (_: Exception) {
+                emptyList()
             }
+        }
             .asSuggestionProvider()
 
     /** Suggests the names of all online players. */
     fun <C : Any> onlinePlayers(api: CloudApi): SuggestionProvider<C> =
         SuspendingSuggestionProvider<C> { _, _ ->
-                try {
-                    api.player().onlinePlayers.await().map { Suggestion.suggestion(it.name) }
-                } catch (_: Exception) {
-                    emptyList()
-                }
+            try {
+                api.player().onlinePlayers.await().map { Suggestion.suggestion(it.name) }
+            } catch (_: Exception) {
+                emptyList()
             }
+        }
             .asSuggestionProvider()
 
     /** Suggests the names of all online players except the command sender. */
     fun <C : CloudSender> otherOnlinePlayers(api: CloudApi): SuggestionProvider<C> =
         SuspendingSuggestionProvider<C> { context, _ ->
-                try {
-                    val uniqueId = context.sender().getUniqueId()
-                    api.player()
-                        .onlinePlayers
-                        .await()
-                        .filter { it.uniqueId != uniqueId }
-                        .map { Suggestion.suggestion(it.name) }
-                } catch (_: Exception) {
-                    emptyList()
-                }
+            try {
+                val uniqueId = context.sender().getUniqueId()
+                api.player()
+                    .onlinePlayers
+                    .await()
+                    .filter { it.uniqueId != uniqueId }
+                    .map { Suggestion.suggestion(it.name) }
+            } catch (_: Exception) {
+                emptyList()
             }
+        }
             .asSuggestionProvider()
 
-    /**
-     * Suggests the names of all players connected to the server stored in the argument
-     * [serverArgument].
-     */
+    // Suggests the names of all players connected to the server stored in the argument
+    // [serverArgument].
     // fun <C : Any> playersOnServer(api: CloudApi, serverArgument: String = "server"):
     // SuggestionProvider<C> =
     //    SuspendingSuggestionProvider<C> { context, _ ->
@@ -170,17 +168,17 @@ object CloudSuggestions {
         proxyArgument: String = "proxy",
     ): SuggestionProvider<C> =
         SuspendingSuggestionProvider<C> { context, _ ->
-                try {
-                    val proxy = context.get<String>(proxyArgument)
-                    api.player()
-                        .onlinePlayers
-                        .await()
-                        .filter { it.connectedProxyName.equals(proxy, true) }
-                        .map { Suggestion.suggestion(it.name) }
-                } catch (_: Exception) {
-                    emptyList()
-                }
+            try {
+                val proxy = context.get<String>(proxyArgument)
+                api.player()
+                    .onlinePlayers
+                    .await()
+                    .filter { it.connectedProxyName.equals(proxy, true) }
+                    .map { Suggestion.suggestion(it.name) }
+            } catch (_: Exception) {
+                emptyList()
             }
+        }
             .asSuggestionProvider()
 
     /** Suggests the target types [TARGET_TYPE_GROUP] and [TARGET_TYPE_PERSISTENT_SERVER]. */
@@ -196,21 +194,23 @@ object CloudSuggestions {
         targetTypeArgument: String = "targetType",
     ): SuggestionProvider<C> =
         SuspendingSuggestionProvider<C> { context, _ ->
-                try {
-                    val targetType = context.get<String>(targetTypeArgument)
-                    when {
-                        targetType.equals(TARGET_TYPE_GROUP, true) ->
-                            api.group().allGroups.await().map { Suggestion.suggestion(it.name) }
-                        targetType.equals(TARGET_TYPE_PERSISTENT_SERVER, true) ->
-                            api.persistentServer().allPersistentServers.await().map {
-                                Suggestion.suggestion(it.name)
-                            }
-                        else -> emptyList()
-                    }
-                } catch (_: Exception) {
-                    emptyList()
+            try {
+                val targetType = context.get<String>(targetTypeArgument)
+                when {
+                    targetType.equals(TARGET_TYPE_GROUP, true) ->
+                        api.group().allGroups.await().map { Suggestion.suggestion(it.name) }
+
+                    targetType.equals(TARGET_TYPE_PERSISTENT_SERVER, true) ->
+                        api.persistentServer().allPersistentServers.await().map {
+                            Suggestion.suggestion(it.name)
+                        }
+
+                    else -> emptyList()
                 }
+            } catch (_: Exception) {
+                emptyList()
             }
+        }
             .asSuggestionProvider()
 
     /** Suggests all known [ServerState]s. */

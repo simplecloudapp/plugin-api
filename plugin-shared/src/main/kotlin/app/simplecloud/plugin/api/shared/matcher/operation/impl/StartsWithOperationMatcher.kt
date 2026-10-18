@@ -6,7 +6,5 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable
 @ConfigSerializable
 object StartsWithOperationMatcher : StringOperationMatcher {
 
-    override fun matches(key: String, value: String): Boolean {
-        return key.startsWith(value, ignoreCase = true)
-    }
+    override fun matches(key: String, value: String): Boolean = key.startsWith(value, ignoreCase = true)
 }

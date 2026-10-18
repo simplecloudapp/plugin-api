@@ -5,7 +5,5 @@ import org.bukkit.entity.Player
 
 class PaperPermissionChecker : PermissionChecker<Player> {
 
-    override fun checkPermission(player: Player, name: String): Boolean {
-        return player.hasPermission(name)
-    }
+    override fun checkPermission(player: Player, name: String): Boolean = player.hasPermission(name)
 }

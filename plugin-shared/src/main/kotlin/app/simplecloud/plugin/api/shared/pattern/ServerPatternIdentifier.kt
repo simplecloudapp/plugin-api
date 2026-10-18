@@ -30,18 +30,16 @@ class ServerPatternIdentifier(
         return Pair(groupName, numericalId)
     }
 
-    fun parseServerToPattern(server: Server): String {
-        return this.pattern
-            .replace("<group_name>", server.serverBase.name)
-            .replace(
-                "<group_pretty_name>",
-                server.properties["pretty-name"]?.toString()
-                    ?: StringPrettifier.prettify(server.serverBase.name),
-            )
-            .replace("<id>", server.serverId)
-            .replace("<unique_id>", server.serverId)
-            .replace("<numerical_id>", server.numericalId.toString())
-    }
+    fun parseServerToPattern(server: Server): String = this.pattern
+        .replace("<group_name>", server.serverBase.name)
+        .replace(
+            "<group_pretty_name>",
+            server.properties["pretty-name"]?.toString()
+                ?: StringPrettifier.prettify(server.serverBase.name),
+        )
+        .replace("<id>", server.serverId)
+        .replace("<unique_id>", server.serverId)
+        .replace("<numerical_id>", server.numericalId.toString())
 
     suspend fun getGroup(name: String): Group? {
         val groupName = parse(name).first
@@ -52,7 +50,5 @@ class ServerPatternIdentifier(
         }
     }
 
-    fun getNumericalId(name: String): Int {
-        return parse(name).second
-    }
+    fun getNumericalId(name: String): Int = parse(name).second
 }

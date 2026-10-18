@@ -4,7 +4,6 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 
-/** @author Niklas Nieberler */
 abstract class YamlDirectoryRepository<E, I>(
     private val directory: Path,
     javaClass: Class<E>,
@@ -22,9 +21,7 @@ abstract class YamlDirectoryRepository<E, I>(
     abstract fun find(identifier: I): E?
 
     /** All cached entities. */
-    fun findAll(): List<E> {
-        return cachedEntities.values.toList()
-    }
+    fun findAll(): List<E> = cachedEntities.values.toList()
 
     /** Loads all `.yml` and `.yaml` files of the directory and creates it if missing. */
     fun load(): List<E> {

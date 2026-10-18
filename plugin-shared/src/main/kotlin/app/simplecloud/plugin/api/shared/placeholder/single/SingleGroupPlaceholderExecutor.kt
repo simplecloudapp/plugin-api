@@ -17,7 +17,6 @@ class SingleGroupPlaceholderExecutor : SinglePlaceholderExecutor<Group> {
             AsyncPlaceholder("online_players") { getOnlinePlayersByGroup(cloudApi, it) },
         )
 
-    private suspend fun getOnlinePlayersByGroup(cloudApi: CloudApi, group: Group): Int {
-        return cloudApi.server().getServersByGroup(group.name).await().sumOf { it.playerCount }
-    }
+    private suspend fun getOnlinePlayersByGroup(cloudApi: CloudApi, group: Group): Int =
+        cloudApi.server().getServersByGroup(group.name).await().sumOf { it.playerCount }
 }

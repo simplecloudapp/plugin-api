@@ -2,26 +2,18 @@ package app.simplecloud.plugin.api.bungeecord.command
 
 import app.simplecloud.plugin.api.bungeecord.text.BungeeComponentConverter
 import app.simplecloud.plugin.api.shared.command.CloudSender
-import java.util.UUID
 import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.connection.ProxiedPlayer
+import java.util.UUID
 
-class BungeeCloudSender(
-    private val commandSender: CommandSender,
-) : CloudSender {
+class BungeeCloudSender(private val commandSender: CommandSender) : CloudSender {
 
-    fun getCommandSender(): CommandSender {
-        return commandSender
-    }
+    fun getCommandSender(): CommandSender = commandSender
 
-    override fun getUniqueId(): UUID? {
-        return (commandSender as? ProxiedPlayer)?.uniqueId
-    }
+    override fun getUniqueId(): UUID? = (commandSender as? ProxiedPlayer)?.uniqueId
 
-    override fun hasPermission(permission: String): Boolean {
-        return commandSender.hasPermission(permission)
-    }
+    override fun hasPermission(permission: String): Boolean = commandSender.hasPermission(permission)
 
     override fun sendMessage(message: Component) {
         commandSender.sendMessage(BungeeComponentConverter.toBungee(message))

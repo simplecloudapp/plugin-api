@@ -5,11 +5,7 @@ import org.incendo.cloud.SenderMapper
 
 object PaperCloudSenderMapper : SenderMapper<CommandSourceStack, PaperCloudSender> {
 
-    override fun map(base: CommandSourceStack): PaperCloudSender {
-        return PaperCloudSender(base)
-    }
+    override fun map(base: CommandSourceStack): PaperCloudSender = PaperCloudSender(base)
 
-    override fun reverse(mapped: PaperCloudSender): CommandSourceStack {
-        return mapped.getSourceStack()
-    }
+    override fun reverse(mapped: PaperCloudSender): CommandSourceStack = mapped.getSourceStack()
 }

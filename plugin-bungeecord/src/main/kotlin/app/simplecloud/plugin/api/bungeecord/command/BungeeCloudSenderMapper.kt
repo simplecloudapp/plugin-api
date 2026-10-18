@@ -5,11 +5,7 @@ import org.incendo.cloud.SenderMapper
 
 class BungeeCloudSenderMapper : SenderMapper<CommandSender, BungeeCloudSender> {
 
-    override fun map(base: CommandSender): BungeeCloudSender {
-        return BungeeCloudSender(base)
-    }
+    override fun map(base: CommandSender): BungeeCloudSender = BungeeCloudSender(base)
 
-    override fun reverse(mapped: BungeeCloudSender): CommandSender {
-        return mapped.getCommandSender()
-    }
+    override fun reverse(mapped: BungeeCloudSender): CommandSender = mapped.getCommandSender()
 }

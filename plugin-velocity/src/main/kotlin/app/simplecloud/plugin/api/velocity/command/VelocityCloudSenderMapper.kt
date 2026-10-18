@@ -5,11 +5,7 @@ import org.incendo.cloud.SenderMapper
 
 object VelocityCloudSenderMapper : SenderMapper<CommandSource, VelocityCloudSender> {
 
-    override fun map(base: CommandSource): VelocityCloudSender {
-        return VelocityCloudSender(base)
-    }
+    override fun map(base: CommandSource): VelocityCloudSender = VelocityCloudSender(base)
 
-    override fun reverse(mapped: VelocityCloudSender): CommandSource {
-        return mapped.getCommandSource()
-    }
+    override fun reverse(mapped: VelocityCloudSender): CommandSource = mapped.getCommandSource()
 }

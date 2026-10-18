@@ -1,7 +1,7 @@
 package app.simplecloud.plugin.api.shared.command
 
-import java.util.UUID
 import net.kyori.adventure.text.Component
+import java.util.UUID
 
 /** A command sender, e.g. a player or the console. */
 interface CloudSender {
