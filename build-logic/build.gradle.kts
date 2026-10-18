@@ -5,4 +5,5 @@ plugins {
 dependencies {
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.shadow.gradle.plugin)
+    implementation(libs.spotless.gradle.plugin)
 }

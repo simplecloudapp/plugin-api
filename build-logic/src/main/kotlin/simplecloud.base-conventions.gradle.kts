@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 plugins {
     kotlin("jvm")
     id("com.gradleup.shadow")
+    id("simplecloud.spotless-conventions")
 }
 
 repositories {
