@@ -3,12 +3,9 @@ package app.simplecloud.plugin.api.shared.placeholder.argument
 import net.kyori.adventure.text.minimessage.tag.Tag
 import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue
 
-/**
- * @author Niklas Nieberler
- */
-
+/** @author Niklas Nieberler */
 class PropertiesArgumentsResolver(
-    private val properties: Map<String, Any>
+    private val properties: Map<String, Any>,
 ) : ArgumentsResolver {
 
     override fun getKey() = "property"
@@ -19,5 +16,4 @@ class PropertiesArgumentsResolver(
         val string = this.properties[argumentName] ?: defaultArgument
         return Tag.preProcessParsed(string.toString())
     }
-
 }

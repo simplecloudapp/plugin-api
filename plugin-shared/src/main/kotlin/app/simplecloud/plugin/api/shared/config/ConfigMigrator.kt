@@ -2,9 +2,7 @@ package app.simplecloud.plugin.api.shared.config
 
 import org.spongepowered.configurate.CommentedConfigurationNode
 
-/**
- * A single migration step that modifies a yaml node in place.
- */
+/** A single migration step that modifies a yaml node in place. */
 fun interface ConfigMigration {
     fun migrate(node: CommentedConfigurationNode)
 }
@@ -18,7 +16,8 @@ fun interface ConfigMigration {
  *     .build()
  * ```
  */
-class ConfigMigrator private constructor(
+class ConfigMigrator
+private constructor(
     private val currentVersion: Int,
     private val fallbackVersion: Int,
     private val migrationsByFromVersion: Map<Int, MigrationStep>,
@@ -30,9 +29,7 @@ class ConfigMigrator private constructor(
         }
     }
 
-    /**
-     * Migrates the [node] to the current version and returns whether anything was migrated.
-     */
+    /** Migrates the [node] to the current version and returns whether anything was migrated. */
     fun migrate(node: CommentedConfigurationNode): Boolean {
         var version = node.node(VERSION_NODE).getInt(fallbackVersion)
 
@@ -42,9 +39,10 @@ class ConfigMigrator private constructor(
 
         var migrated = false
         while (version < currentVersion) {
-            val migration = checkNotNull(migrationsByFromVersion[version]) {
-                "Missing config migration from version $version to $currentVersion"
-            }
+            val migration =
+                checkNotNull(migrationsByFromVersion[version]) {
+                    "Missing config migration from version $version to $currentVersion"
+                }
 
             migration.action.migrate(node)
             version = migration.toVersion
@@ -55,16 +53,15 @@ class ConfigMigrator private constructor(
         return migrated
     }
 
-    class Builder internal constructor(
+    class Builder
+    internal constructor(
         private val currentVersion: Int,
     ) {
 
         private var fallbackVersion = 0
         private val migrations = mutableMapOf<Int, MigrationStep>()
 
-        /**
-         * The version that is assumed if the config has no version node yet. Defaults to `0`.
-         */
+        /** The version that is assumed if the config has no version node yet. Defaults to `0`. */
         fun fallbackVersion(version: Int): Builder = apply {
             require(version >= 0) {
                 "The fallback version must be greater than or equal to 0"
@@ -72,9 +69,7 @@ class ConfigMigrator private constructor(
             fallbackVersion = version
         }
 
-        /**
-         * Registers a migration from [fromVersion] to [toVersion].
-         */
+        /** Registers a migration from [fromVersion] to [toVersion]. */
         fun migrate(fromVersion: Int, toVersion: Int, action: ConfigMigration): Builder = apply {
             require(fromVersion >= 0) {
                 "The source config version must be greater than or equal to 0"
@@ -92,11 +87,12 @@ class ConfigMigrator private constructor(
             migrations[fromVersion] = MigrationStep(toVersion, action)
         }
 
-        fun build(): ConfigMigrator = ConfigMigrator(
-            currentVersion = currentVersion,
-            fallbackVersion = fallbackVersion,
-            migrationsByFromVersion = migrations.toMap(),
-        )
+        fun build(): ConfigMigrator =
+            ConfigMigrator(
+                currentVersion = currentVersion,
+                fallbackVersion = fallbackVersion,
+                migrationsByFromVersion = migrations.toMap(),
+            )
     }
 
     private data class MigrationStep(

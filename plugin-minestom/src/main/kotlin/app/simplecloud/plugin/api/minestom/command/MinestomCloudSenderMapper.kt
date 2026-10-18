@@ -5,7 +5,7 @@ import net.minestom.server.command.CommandSender
 import org.incendo.cloud.SenderMapper
 
 class MinestomCloudSenderMapper(
-    private val permissions: MinestomPermissions
+    private val permissions: MinestomPermissions,
 ) : SenderMapper<CommandSender, MinestomCloudSender> {
 
     override fun map(base: CommandSender): MinestomCloudSender {
@@ -15,5 +15,4 @@ class MinestomCloudSenderMapper(
     override fun reverse(mapped: MinestomCloudSender): CommandSender {
         return mapped.getCommandSender()
     }
-
 }

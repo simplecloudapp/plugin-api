@@ -9,5 +9,4 @@ object StartsWithOperationMatcher : StringOperationMatcher {
     override fun matches(key: String, value: String): Boolean {
         return key.startsWith(value, ignoreCase = true)
     }
-
 }

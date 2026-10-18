@@ -12,5 +12,4 @@ object PaperCloudSenderMapper : SenderMapper<CommandSourceStack, PaperCloudSende
     override fun reverse(mapped: PaperCloudSender): CommandSourceStack {
         return mapped.getSourceStack()
     }
-
 }

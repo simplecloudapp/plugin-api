@@ -1,13 +1,13 @@
 package app.simplecloud.plugin.api.minestom.permission
 
+import java.util.function.BiPredicate
 import net.minestom.server.command.CommandSender
 import net.minestom.server.command.ConsoleSender
 import net.minestom.server.entity.Player
-import java.util.function.BiPredicate
 
 /**
- * Utility for checking permissions on a Minestom server.
- * Without a [check], only players with permission level 4 have permissions.
+ * Utility for checking permissions on a Minestom server. Without a [check], only players with
+ * permission level 4 have permissions.
  */
 class MinestomPermissions(private val check: BiPredicate<Player, String>?) {
 
@@ -25,5 +25,4 @@ class MinestomPermissions(private val check: BiPredicate<Player, String>?) {
     fun getChecker(): MinestomPermissionChecker {
         return MinestomPermissionChecker(this)
     }
-
 }

@@ -29,5 +29,4 @@ class PlayerCountArgumentsResolver(
             servers.sumOf { it.playerCount }
         }
     }
-
 }

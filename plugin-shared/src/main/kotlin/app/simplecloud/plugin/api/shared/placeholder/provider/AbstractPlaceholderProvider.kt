@@ -9,10 +9,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.Tag
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 
-/**
- * @author Niklas Nieberler
- */
-
+/** @author Niklas Nieberler */
 abstract class AbstractPlaceholderProvider<T>(
     private val executor: SinglePlaceholderExecutor<T>,
 ) {
@@ -21,6 +18,7 @@ abstract class AbstractPlaceholderProvider<T>(
 
     /**
      * Gets the list of all available [ArgumentsResolver]
+     *
      * @param cloudApi the instance of [CloudApi]
      * @param value for the placeholder
      */
@@ -31,6 +29,7 @@ abstract class AbstractPlaceholderProvider<T>(
 
     /**
      * Gets the sum of all [TagResolver]
+     *
      * @param values for the placeholder
      * @param prefix of the placeholder key
      */
@@ -43,17 +42,20 @@ abstract class AbstractPlaceholderProvider<T>(
             addAll(values.flatMap { getArgumentsResolvers(cloudApi, it) })
             addAll(argumentsResolver)
         }
-        val singleTagResolver = values.map { this.executor.getTagResolver(this.cloudApi, it, prefix) }
+        val singleTagResolver = values.map {
+            this.executor.getTagResolver(this.cloudApi, it, prefix)
+        }
         return TagResolver.resolver(
             *singleTagResolver.toTypedArray(),
             *availableArgumentsResolver
                 .map { convertArgumentsResolverToTagResolver(it, prefix) }
-                .toTypedArray()
+                .toTypedArray(),
         )
     }
 
     /**
      * Serializes the string to a [Component]
+     *
      * @param value for the placeholder
      * @param string the message
      * @param prefix of the placeholder key
@@ -72,6 +74,7 @@ abstract class AbstractPlaceholderProvider<T>(
 
     /**
      * Serializes the string to a [Component]
+     *
      * @param values for the placeholder
      * @param string the message
      * @param prefix of the placeholder key
@@ -88,12 +91,14 @@ abstract class AbstractPlaceholderProvider<T>(
         )
     }
 
-    private fun convertArgumentsResolverToTagResolver(resolver: ArgumentsResolver, prefix: String?): TagResolver {
+    private fun convertArgumentsResolverToTagResolver(
+        resolver: ArgumentsResolver,
+        prefix: String?,
+    ): TagResolver {
         val key = resolver.getKey()
         val resolvedKey = prefix?.let { "${it}_$key" } ?: key
         return TagResolver.resolver(resolvedKey) { arguments, _ ->
             return@resolver runBlocking { resolver.resolve(arguments) as Tag }
         }
     }
-
 }

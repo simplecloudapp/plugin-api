@@ -3,8 +3,8 @@ package app.simplecloud.plugin.api.velocity.command
 import app.simplecloud.plugin.api.shared.command.CloudSender
 import com.velocitypowered.api.command.CommandSource
 import com.velocitypowered.api.proxy.Player
-import net.kyori.adventure.text.Component
 import java.util.UUID
+import net.kyori.adventure.text.Component
 
 class VelocityCloudSender(private val commandSource: CommandSource) : CloudSender {
 
@@ -23,5 +23,4 @@ class VelocityCloudSender(private val commandSource: CommandSource) : CloudSende
     override fun sendMessage(message: Component) {
         commandSource.sendMessage(message)
     }
-
 }

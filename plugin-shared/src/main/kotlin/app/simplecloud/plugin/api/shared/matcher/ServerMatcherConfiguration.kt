@@ -2,10 +2,7 @@ package app.simplecloud.plugin.api.shared.matcher
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable
 
-/**
- * @author Niklas Nieberler
- */
-
+/** @author Niklas Nieberler */
 @ConfigSerializable
 data class ServerMatcherConfiguration(
     val operation: OperationType = OperationType.STARTS_WITH,
@@ -24,5 +21,4 @@ data class ServerMatcherConfiguration(
     fun allMatches(names: List<String>): Boolean {
         return this.operation.allMatches(names, this.value, this.negate)
     }
-
 }

@@ -9,5 +9,4 @@ object RegexOperationMatcher : StringOperationMatcher {
     override fun matches(key: String, value: String): Boolean {
         return Regex(value).matches(key)
     }
-
 }

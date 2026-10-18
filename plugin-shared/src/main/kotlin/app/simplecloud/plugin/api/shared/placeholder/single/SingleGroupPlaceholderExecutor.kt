@@ -7,18 +7,17 @@ import kotlinx.coroutines.future.await
 
 class SingleGroupPlaceholderExecutor : SinglePlaceholderExecutor<Group> {
 
-    override fun getAsyncPlaceholders(cloudApi: CloudApi) = listOf<AsyncPlaceholder<Group>>(
-        AsyncPlaceholder("name") { it.name },
-        AsyncPlaceholder("type") { it.type },
-        AsyncPlaceholder("max_players") { it.maxPlayers },
-        AsyncPlaceholder("min_memory") { it.minMemory },
-        AsyncPlaceholder("max_memory") { it.maxMemory },
-        AsyncPlaceholder("online_players") { getOnlinePlayersByGroup(cloudApi, it) },
-    )
+    override fun getAsyncPlaceholders(cloudApi: CloudApi) =
+        listOf<AsyncPlaceholder<Group>>(
+            AsyncPlaceholder("name") { it.name },
+            AsyncPlaceholder("type") { it.type },
+            AsyncPlaceholder("max_players") { it.maxPlayers },
+            AsyncPlaceholder("min_memory") { it.minMemory },
+            AsyncPlaceholder("max_memory") { it.maxMemory },
+            AsyncPlaceholder("online_players") { getOnlinePlayersByGroup(cloudApi, it) },
+        )
 
     private suspend fun getOnlinePlayersByGroup(cloudApi: CloudApi, group: Group): Int {
-        return cloudApi.server().getServersByGroup(group.name).await()
-            .sumOf { it.playerCount }
+        return cloudApi.server().getServersByGroup(group.name).await().sumOf { it.playerCount }
     }
-
 }

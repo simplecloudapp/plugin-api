@@ -6,5 +6,5 @@ enum class PrettifyCase {
     PASCAL,
     SENTENCE,
     KEBAB,
-    SNAKE
+    SNAKE,
 }

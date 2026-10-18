@@ -1,15 +1,13 @@
 package app.simplecloud.plugin.api.shared.config
 
 import app.simplecloud.plugin.api.shared.config.serializer.GenericEnumSerializer
+import java.io.File
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.kotlin.objectMapperFactory
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
-import java.io.File
 
-/**
- * @author Niklas Nieberler
- */
+/** @author Niklas Nieberler */
 class YamlFileConfigurator<E>(
     private val javaClass: Class<E>,
     private val configMigrator: ConfigMigrator? = null,
@@ -23,9 +21,8 @@ class YamlFileConfigurator<E>(
 
     private val configurationLoaders = hashMapOf<File, YamlConfigurationLoader>()
 
-    private val defaultConfigurationBuilder = YamlConfigurationLoader.builder()
-        .nodeStyle(NodeStyle.BLOCK)
-        .defaultOptions { options ->
+    private val defaultConfigurationBuilder =
+        YamlConfigurationLoader.builder().nodeStyle(NodeStyle.BLOCK).defaultOptions { options ->
             options.serializers { builder ->
                 builder.registerAnnotatedObjects(objectMapperFactory())
                 builder.register(Enum::class.java, GenericEnumSerializer)
@@ -33,18 +30,14 @@ class YamlFileConfigurator<E>(
             }
         }
 
-    /**
-     * Writes the [entity] to the [file].
-     */
+    /** Writes the [entity] to the [file]. */
     fun save(file: File, entity: E) {
         val (node, loader) = buildNode(file)
         node.set(javaClass, entity)
         loader.save(node)
     }
 
-    /**
-     * Reads the [file], migrates it if needed and saves the migrated result.
-     */
+    /** Reads the [file], migrates it if needed and saves the migrated result. */
     fun load(file: File): E? {
         val (node, loader) = buildNode(file)
         if (configMigrator?.migrate(node) == true) {
@@ -53,21 +46,16 @@ class YamlFileConfigurator<E>(
         return node.get(javaClass)
     }
 
-    /**
-     * Loads the raw node of the [file] together with its loader.
-     */
+    /** Loads the raw node of the [file] together with its loader. */
     fun buildNode(file: File): Pair<CommentedConfigurationNode, YamlConfigurationLoader> {
         val loader = getOrCreateConfigurationLoader(file)
         return loader.load() to loader
     }
 
-    /**
-     * The cached loader of the [file].
-     */
+    /** The cached loader of the [file]. */
     fun getOrCreateConfigurationLoader(file: File): YamlConfigurationLoader {
         return configurationLoaders.getOrPut(file) {
             defaultConfigurationBuilder.path(file.toPath()).build()
         }
     }
-
 }

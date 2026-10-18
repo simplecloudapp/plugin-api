@@ -3,9 +3,7 @@ package app.simplecloud.plugin.api.shared.config
 import java.io.File
 import java.nio.file.Path
 
-/**
- * @author Niklas Nieberler
- */
+/** @author Niklas Nieberler */
 class ConfigurationFactory<E>(
     private val file: File,
     javaClass: Class<E>,
@@ -16,9 +14,7 @@ class ConfigurationFactory<E>(
 
     private var config: E? = null
 
-    /**
-     * Loads the config, or creates the file from [defaultConfig] if it does not exist.
-     */
+    /** Loads the config, or creates the file from [defaultConfig] if it does not exist. */
     fun loadOrCreate(defaultConfig: E): E {
         if (file.exists()) {
             return load() ?: throw NullPointerException("failed to load config")
@@ -28,24 +24,18 @@ class ConfigurationFactory<E>(
         return defaultConfig
     }
 
-    /**
-     * The cached config. Throws if it has not been loaded yet.
-     */
+    /** The cached config. Throws if it has not been loaded yet. */
     fun get(): E {
         return config ?: throw NullPointerException("failed to find config")
     }
 
-    /**
-     * Writes the [entry] to the file and caches it.
-     */
+    /** Writes the [entry] to the file and caches it. */
     fun save(entry: E) {
         configurator.save(file, entry)
         config = entry
     }
 
-    /**
-     * Reloads the file into the cache.
-     */
+    /** Reloads the file into the cache. */
     fun reload() {
         load()
     }
@@ -70,12 +60,12 @@ class ConfigurationFactory<E>(
         ): ConfigurationFactory<E> {
             val file = File(dataDirectory, fileName)
             DefaultConfigInstaller.install(file.toPath(), classLoader)
-            return ConfigurationFactory(file, E::class.java, migrator).also { it.loadOrCreate(default) }
+            return ConfigurationFactory(file, E::class.java, migrator).also {
+                it.loadOrCreate(default)
+            }
         }
 
-        /**
-         * Same as [create] but with a [Path] as data directory.
-         */
+        /** Same as [create] but with a [Path] as data directory. */
         inline fun <reified E> create(
             dataDirectory: Path,
             fileName: String,

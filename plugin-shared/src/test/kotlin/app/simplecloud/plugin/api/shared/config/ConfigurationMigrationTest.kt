@@ -17,14 +17,16 @@ class ConfigurationMigrationTest {
         file.writeText(
             """
             name: legacy-value
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
 
-        val configurationFactory = ConfigurationFactory(
-            file = file,
-            javaClass = TestVersionedConfig::class.java,
-            configMigrator = testMigrator(),
-        )
+        val configurationFactory =
+            ConfigurationFactory(
+                file = file,
+                javaClass = TestVersionedConfig::class.java,
+                configMigrator = testMigrator(),
+            )
 
         val config = configurationFactory.loadOrCreate(TestVersionedConfig())
 
@@ -47,13 +49,15 @@ class ConfigurationMigrationTest {
             """
             version: 1
             message: repository-value
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
 
-        val repository = TestYamlDirectoryRepository(
-            directory = tempDirectory,
-            configMigrator = testMigrator(),
-        )
+        val repository =
+            TestYamlDirectoryRepository(
+                directory = tempDirectory,
+                configMigrator = testMigrator(),
+            )
 
         val loadedEntries = repository.load()
 
@@ -91,11 +95,12 @@ class ConfigurationMigrationTest {
     private class TestYamlDirectoryRepository(
         directory: Path,
         configMigrator: ConfigMigrator,
-    ) : YamlDirectoryRepository<TestVersionedConfig, String>(
-        directory = directory,
-        javaClass = TestVersionedConfig::class.java,
-        configMigrator = configMigrator,
-    ) {
+    ) :
+        YamlDirectoryRepository<TestVersionedConfig, String>(
+            directory = directory,
+            javaClass = TestVersionedConfig::class.java,
+            configMigrator = configMigrator,
+        ) {
 
         override fun save(entity: TestVersionedConfig) {
             save("${entity.message}.yml", entity)

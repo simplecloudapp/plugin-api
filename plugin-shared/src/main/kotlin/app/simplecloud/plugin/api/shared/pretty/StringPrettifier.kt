@@ -2,9 +2,7 @@ package app.simplecloud.plugin.api.shared.pretty
 
 object StringPrettifier {
 
-    /**
-     * Converts various string formats to different cases
-     */
+    /** Converts various string formats to different cases */
     fun prettify(input: String, case: PrettifyCase = PrettifyCase.TITLE): String {
         return when (case) {
             PrettifyCase.TITLE -> toTitleCase(input)
@@ -17,7 +15,8 @@ object StringPrettifier {
     }
 
     private fun toTitleCase(input: String): String {
-        return input.split(Regex("[\\s_-]"))
+        return input
+            .split(Regex("[\\s_-]"))
             .filter { it.isNotEmpty() }
             .joinToString(" ") { word ->
                 word.lowercase().replaceFirstChar { it.uppercase() }
@@ -25,7 +24,8 @@ object StringPrettifier {
     }
 
     private fun toCamelCase(input: String): String {
-        return input.split(Regex("[\\s_-]"))
+        return input
+            .split(Regex("[\\s_-]"))
             .filter { it.isNotEmpty() }
             .mapIndexed { index, word ->
                 if (index == 0) word.lowercase()
@@ -35,7 +35,8 @@ object StringPrettifier {
     }
 
     private fun toPascalCase(input: String): String {
-        return input.split(Regex("[\\s_-]"))
+        return input
+            .split(Regex("[\\s_-]"))
             .filter { it.isNotEmpty() }
             .joinToString("") { word ->
                 word.lowercase().replaceFirstChar { it.uppercase() }
@@ -43,22 +44,24 @@ object StringPrettifier {
     }
 
     private fun toSentenceCase(input: String): String {
-        return input.split(Regex("[\\s_-]"))
+        return input
+            .split(Regex("[\\s_-]"))
             .filter { it.isNotEmpty() }
             .joinToString(" ") { it.lowercase() }
             .replaceFirstChar { it.uppercase() }
     }
 
     private fun toKebabCase(input: String): String {
-        return input.split(Regex("[\\s_]"))
+        return input
+            .split(Regex("[\\s_]"))
             .filter { it.isNotEmpty() }
             .joinToString("-") { it.lowercase() }
     }
 
     private fun toSnakeCase(input: String): String {
-        return input.split(Regex("[\\s-]"))
+        return input
+            .split(Regex("[\\s-]"))
             .filter { it.isNotEmpty() }
             .joinToString("_") { it.lowercase() }
     }
-
 }

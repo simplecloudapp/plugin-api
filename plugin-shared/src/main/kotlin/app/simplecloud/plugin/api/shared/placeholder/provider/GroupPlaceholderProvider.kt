@@ -7,14 +7,15 @@ import app.simplecloud.plugin.api.shared.placeholder.argument.group.PlayerCountA
 import app.simplecloud.plugin.api.shared.placeholder.argument.group.ServerCountArgumentsResolver
 import app.simplecloud.plugin.api.shared.placeholder.single.SingleGroupPlaceholderExecutor
 
-class GroupPlaceholderProvider : AbstractPlaceholderProvider<Group>(
-    SingleGroupPlaceholderExecutor()
-) {
+class GroupPlaceholderProvider :
+    AbstractPlaceholderProvider<Group>(
+        SingleGroupPlaceholderExecutor(),
+    ) {
 
-    override suspend fun getArgumentsResolvers(cloudApi: CloudApi, value: Group) = listOf(
-        PropertiesArgumentsResolver(value.properties),
-        PlayerCountArgumentsResolver(cloudApi, value),
-        ServerCountArgumentsResolver(cloudApi, value)
-    )
-
+    override suspend fun getArgumentsResolvers(cloudApi: CloudApi, value: Group) =
+        listOf(
+            PropertiesArgumentsResolver(value.properties),
+            PlayerCountArgumentsResolver(cloudApi, value),
+            ServerCountArgumentsResolver(cloudApi, value),
+        )
 }

@@ -22,8 +22,9 @@ fun tags(vararg entries: Pair<String, Any?>): TagResolver {
     return TagResolver.resolver(
         entries.map { (key, value) ->
             val text = value?.toString() ?: ""
-            if (key == "playername" && playerNameRegex.matches(text)) Placeholder.parsed(key, text) else Placeholder.unparsed(key, text)
-        }
+            if (key == "playername" && playerNameRegex.matches(text)) Placeholder.parsed(key, text)
+            else Placeholder.unparsed(key, text)
+        },
     )
 }
 
@@ -32,21 +33,36 @@ suspend fun String.appendToComponent(
     prefix: String? = null,
     vararg argumentsResolver: ArgumentsResolver,
 ): Component {
-    return PlaceholderProvider.serverPlaceholderProvider.append(server, this, prefix, *argumentsResolver)
+    return PlaceholderProvider.serverPlaceholderProvider.append(
+        server,
+        this,
+        prefix,
+        *argumentsResolver,
+    )
 }
 
 suspend fun String.appendToComponent(
     group: Group,
     prefix: String? = null,
-    vararg argumentsResolver: ArgumentsResolver
+    vararg argumentsResolver: ArgumentsResolver,
 ): Component {
-    return PlaceholderProvider.groupPlaceholderProvider.append(group, this, prefix, *argumentsResolver)
+    return PlaceholderProvider.groupPlaceholderProvider.append(
+        group,
+        this,
+        prefix,
+        *argumentsResolver,
+    )
 }
 
 suspend fun String.appendToComponent(
     persistentServer: PersistentServer,
     prefix: String? = null,
-    vararg argumentsResolver: ArgumentsResolver
+    vararg argumentsResolver: ArgumentsResolver,
 ): Component {
-    return PlaceholderProvider.persistentServerPlaceholderProvider.append(persistentServer, this, prefix, *argumentsResolver)
+    return PlaceholderProvider.persistentServerPlaceholderProvider.append(
+        persistentServer,
+        this,
+        prefix,
+        *argumentsResolver,
+    )
 }

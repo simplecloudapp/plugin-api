@@ -12,5 +12,4 @@ object VelocityCloudSenderMapper : SenderMapper<CommandSource, VelocityCloudSend
     override fun reverse(mapped: VelocityCloudSender): CommandSource {
         return mapped.getCommandSource()
     }
-
 }

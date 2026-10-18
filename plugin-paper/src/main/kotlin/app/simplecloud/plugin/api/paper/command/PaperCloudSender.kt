@@ -2,10 +2,10 @@ package app.simplecloud.plugin.api.paper.command
 
 import app.simplecloud.plugin.api.shared.command.CloudSender
 import io.papermc.paper.command.brigadier.CommandSourceStack
+import java.util.UUID
 import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import java.util.UUID
 
 class PaperCloudSender(private val sourceStack: CommandSourceStack) : CloudSender {
 
@@ -28,5 +28,4 @@ class PaperCloudSender(private val sourceStack: CommandSourceStack) : CloudSende
     override fun sendMessage(message: Component) {
         sourceStack.sender.sendMessage(message)
     }
-
 }

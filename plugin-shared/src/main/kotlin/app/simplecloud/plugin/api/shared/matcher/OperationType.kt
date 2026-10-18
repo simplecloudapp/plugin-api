@@ -6,7 +6,7 @@ import app.simplecloud.plugin.api.shared.matcher.operation.StringOperationMatche
 import app.simplecloud.plugin.api.shared.matcher.operation.impl.*
 
 enum class OperationType(
-    private val matcher: OperationMatcher<*, *>
+    private val matcher: OperationMatcher<*, *>,
 ) {
 
     REGEX(RegexOperationMatcher),
@@ -18,21 +18,22 @@ enum class OperationType(
     GREATER_THAN(GreaterThanOperationMatcher);
 
     fun matches(key: Any, value: Any, negate: Boolean): Boolean {
-        val matches = when (matcher) {
-            is StringOperationMatcher -> {
-                if (key is String && value is String) {
-                    matcher.matches(key, value)
-                } else false
-            }
+        val matches =
+            when (matcher) {
+                is StringOperationMatcher -> {
+                    if (key is String && value is String) {
+                        matcher.matches(key, value)
+                    } else false
+                }
 
-            is NumericOperationMatcher -> {
-                if (key is Int && value is Int) {
-                    matcher.matches(key, value)
-                } else false
-            }
+                is NumericOperationMatcher -> {
+                    if (key is Int && value is Int) {
+                        matcher.matches(key, value)
+                    } else false
+                }
 
-            else -> false
-        }
+                else -> false
+            }
 
         return if (negate) matches.not() else matches
     }
@@ -44,5 +45,4 @@ enum class OperationType(
     fun allMatches(names: List<String>, value: String, negate: Boolean): Boolean {
         return names.all { matches(it, value, negate) }
     }
-
 }

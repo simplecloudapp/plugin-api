@@ -9,5 +9,4 @@ object EndsWithOperationMatcher : StringOperationMatcher {
     override fun matches(key: String, value: String): Boolean {
         return key.endsWith(value, ignoreCase = true)
     }
-
 }

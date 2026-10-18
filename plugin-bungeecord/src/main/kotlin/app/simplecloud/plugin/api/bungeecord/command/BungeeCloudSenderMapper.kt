@@ -12,5 +12,4 @@ class BungeeCloudSenderMapper : SenderMapper<CommandSender, BungeeCloudSender> {
     override fun reverse(mapped: BungeeCloudSender): CommandSender {
         return mapped.getCommandSender()
     }
-
 }

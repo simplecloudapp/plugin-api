@@ -8,5 +8,4 @@ class PaperPermissionChecker : PermissionChecker<Player> {
     override fun checkPermission(player: Player, name: String): Boolean {
         return player.hasPermission(name)
     }
-
 }

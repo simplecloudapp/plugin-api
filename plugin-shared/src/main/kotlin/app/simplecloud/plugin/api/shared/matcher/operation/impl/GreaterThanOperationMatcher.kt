@@ -7,5 +7,4 @@ object GreaterThanOperationMatcher : NumericOperationMatcher {
     override fun matches(key: Int, value: Int): Boolean {
         return key > value
     }
-
 }

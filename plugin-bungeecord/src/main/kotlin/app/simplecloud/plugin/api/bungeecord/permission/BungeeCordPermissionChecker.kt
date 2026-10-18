@@ -8,5 +8,4 @@ class BungeeCordPermissionChecker : PermissionChecker<ProxiedPlayer> {
     override fun checkPermission(player: ProxiedPlayer, name: String): Boolean {
         return player.hasPermission(name)
     }
-
 }

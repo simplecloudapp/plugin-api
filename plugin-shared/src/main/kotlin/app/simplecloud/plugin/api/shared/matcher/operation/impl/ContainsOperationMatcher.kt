@@ -9,5 +9,4 @@ object ContainsOperationMatcher : StringOperationMatcher {
     override fun matches(key: String, value: String): Boolean {
         return key.contains(value, ignoreCase = true)
     }
-
 }
