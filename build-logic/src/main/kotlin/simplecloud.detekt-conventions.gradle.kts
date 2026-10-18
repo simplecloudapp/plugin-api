@@ -1,3 +1,5 @@
+import app.simplecloud.gradle.WriteTextFile
+
 plugins {
     id("dev.detekt")
 }
@@ -5,17 +7,16 @@ plugins {
 val defaultConfigText = checkNotNull(javaClass.getResource("/detekt/detekt.yml")) { "detekt.yml not found" }.readText()
 val projectConfig = rootProject.file("config/detekt/detekt.yml")
 
-val extractDetektConfig = tasks.register("extractDetektConfig") {
-    val output = layout.buildDirectory.file("detekt/detekt.yml")
-    inputs.property("config", defaultConfigText)
-    outputs.file(output)
-    doLast { output.get().asFile.writeText(defaultConfigText) }
+val extractDetektConfig = tasks.register<WriteTextFile>("extractDetektConfig") {
+    description = "Extracts the detekt config"
+    text = defaultConfigText
+    outputFile = layout.buildDirectory.file("detekt/detekt.yml")
 }
 
 detekt {
     buildUponDefaultConfig = true
     parallel = true
-    config.setFrom(extractDetektConfig)
+    config.setFrom(extractDetektConfig.flatMap { it.outputFile })
     if (projectConfig.exists()) {
         config.from(projectConfig)
     }
