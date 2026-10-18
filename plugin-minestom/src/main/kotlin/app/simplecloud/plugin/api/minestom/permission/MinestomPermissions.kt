@@ -13,13 +13,12 @@ class MinestomPermissions(private val check: BiPredicate<Player, String>?) {
 
     val hasCheck: Boolean = check != null
 
-    fun hasPermission(sender: CommandSender, permission: String): Boolean {
-        if (permission.isEmpty()) return true
-        if (sender is ConsoleSender) return true
-        if (sender !is Player) return false
-
-        if (check != null) return check.test(sender, permission)
-        return sender.permissionLevel >= 4
+    fun hasPermission(sender: CommandSender, permission: String): Boolean = when {
+        permission.isEmpty() -> true
+        sender is ConsoleSender -> true
+        sender !is Player -> false
+        check != null -> check.test(sender, permission)
+        else -> sender.permissionLevel >= 4
     }
 
     fun getChecker(): MinestomPermissionChecker = MinestomPermissionChecker(this)
