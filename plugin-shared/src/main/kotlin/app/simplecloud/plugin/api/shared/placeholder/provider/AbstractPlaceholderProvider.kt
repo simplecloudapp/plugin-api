@@ -43,10 +43,7 @@ abstract class AbstractPlaceholderProvider<T>(private val executor: SinglePlaceh
             this.executor.getTagResolver(this.cloudApi, it, prefix)
         }
         return TagResolver.resolver(
-            *singleTagResolver.toTypedArray(),
-            *availableArgumentsResolver
-                .map { convertArgumentsResolverToTagResolver(it, prefix) }
-                .toTypedArray(),
+            singleTagResolver + availableArgumentsResolver.map { convertArgumentsResolverToTagResolver(it, prefix) },
         )
     }
 

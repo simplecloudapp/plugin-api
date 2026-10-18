@@ -21,7 +21,7 @@ class ServerCountArgumentsResolver(private val cloudApi: CloudApi, private val g
     private suspend fun findServerCount(group: Group, state: ServerState?): Int {
         val servers = this.cloudApi.server().getServersByGroup(group.name).await()
         return if (state != null) {
-            servers.filter { it.state == state }.size
+            servers.count { it.state == state }
         } else {
             servers.size
         }

@@ -18,15 +18,15 @@ class ServerPatternIdentifier(
     private val regex = Regex(regexPattern)
 
     fun parse(name: String, customRegex: Regex? = null): Pair<String, Int> {
-        val matchResult = customRegex?.matchEntire(name) ?: this.regex.matchEntire(name)
-        if (matchResult == null) throw IllegalArgumentException("$name does not match the pattern")
-
-        val groupName =
-            matchResult.groups["groupName"]?.value
-                ?: throw IllegalArgumentException("Group name not found")
-        val numericalId =
-            matchResult.groups["numericalId"]?.value?.toInt()
-                ?: throw IllegalArgumentException("Numerical ID not found")
+        val matchResult = requireNotNull(customRegex?.matchEntire(name) ?: this.regex.matchEntire(name)) {
+            "$name does not match the pattern"
+        }
+        val groupName = requireNotNull(matchResult.groups["groupName"]?.value) {
+            "Group name not found"
+        }
+        val numericalId = requireNotNull(matchResult.groups["numericalId"]?.value?.toInt()) {
+            "Numerical ID not found"
+        }
         return Pair(groupName, numericalId)
     }
 
@@ -45,7 +45,7 @@ class ServerPatternIdentifier(
         val groupName = parse(name).first
         return try {
             this.cloudApi.group().getGroupByName(groupName).await()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

@@ -9,7 +9,7 @@ class PropertiesArgumentsResolver(private val properties: Map<String, Any>) : Ar
 
     override suspend fun resolve(arguments: ArgumentQueue): Tag? {
         val argumentName = arguments.popOr("property expected").value()
-        val defaultArgument = arguments.peek()?.value() ?: ""
+        val defaultArgument = arguments.peek()?.value().orEmpty()
         val string = this.properties[argumentName] ?: defaultArgument
         return Tag.preProcessParsed(string.toString())
     }

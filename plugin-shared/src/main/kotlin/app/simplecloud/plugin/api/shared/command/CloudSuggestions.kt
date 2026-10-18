@@ -243,8 +243,11 @@ object CloudSuggestions {
 
     private fun serverName(server: Server): String? {
         val persistentServer = server.persistentServer
-        if (persistentServer != null) return persistentServer.name
-        val group = server.group ?: return null
-        return "${group.name}-${server.numericalId}"
+        val group = server.group
+        return when {
+            persistentServer != null -> persistentServer.name
+            group != null -> "${group.name}-${server.numericalId}"
+            else -> null
+        }
     }
 }

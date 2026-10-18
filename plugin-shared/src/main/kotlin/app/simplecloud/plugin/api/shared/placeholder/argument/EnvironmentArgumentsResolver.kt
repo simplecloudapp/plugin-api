@@ -9,7 +9,7 @@ class EnvironmentArgumentsResolver : ArgumentsResolver {
 
     override suspend fun resolve(arguments: ArgumentQueue): Tag? {
         val argumentName = arguments.popOr("environment expected").value()
-        val defaultArgument = arguments.peek()?.value() ?: ""
+        val defaultArgument = arguments.peek()?.value().orEmpty()
         val string = System.getenv(argumentName) ?: defaultArgument
         return Tag.preProcessParsed(string)
     }

@@ -18,7 +18,7 @@ fun text(message: String, vararg tagResolver: TagResolver): Component = miniMess
 
 fun tags(vararg entries: Pair<String, Any?>): TagResolver = TagResolver.resolver(
     entries.map { (key, value) ->
-        val text = value?.toString() ?: ""
+        val text = value?.toString().orEmpty()
         if (key == "playername" && playerNameRegex.matches(text)) {
             Placeholder.parsed(key, text)
         } else {
