@@ -6,6 +6,15 @@ on:
       - main
       - develop
   workflow_dispatch:
+    inputs:
+      type:
+        description: 'Release type'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - release
 
 concurrency:
   group: release-${{ github.ref }}
@@ -20,10 +29,16 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GRADLE_ARGS: ${{ github.ref_name == 'main' && '-Prelease' || '' }}
-      IS_RELEASE: ${{ github.ref_name == 'main' }}
+      GRADLE_ARGS: ${{ ((github.event_name == 'push' && github.ref_name == 'main') || inputs.type == 'release') && '-Prelease' || '' }}
+      IS_RELEASE: ${{ (github.event_name == 'push' && github.ref_name == 'main') || inputs.type == 'release' }}
 
     steps:
+      - name: Check branch
+        if: env.IS_RELEASE == 'true' && github.ref_name != 'main'
+        run: |
+          echo "::error::Releases can only be created from main"
+          exit 1
+
       - name: Checkout repository
         uses: actions/checkout@v7
 
