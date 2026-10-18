@@ -11,7 +11,7 @@ include(
     "plugin-minestom",
     "plugin-paper",
     "plugin-shared",
-    "plugin-velocity"
+    "plugin-velocity",
 )
 
 rootProject.name = "plugin-api"

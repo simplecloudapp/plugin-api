@@ -63,7 +63,7 @@ jobs:
         run: ./gradlew clean build $GRADLE_ARGS
 
       - name: Publish to SimpleCloud Repository
-        run: ./gradlew publish $GRADLE_ARGS
+        run: ./gradlew publish :build-logic:publish $GRADLE_ARGS
         env:
           SIMPLECLOUD_USERNAME: ${{ secrets.SIMPLECLOUD_USERNAME }}
           SIMPLECLOUD_PASSWORD: ${{ secrets.SIMPLECLOUD_PASSWORD }}

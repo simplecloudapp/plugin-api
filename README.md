@@ -39,20 +39,20 @@ This repository holds classes that are very commonly used in plugins.
 ### Gradle Kotlin
 
 ```kt
-implementation("app.simplecloud.plugin:plugin-shared:VERSION")
+implementation("app.simplecloud.api.plugin:plugin-shared:VERSION")
 ```
 
 ### Gradle Groovy
 
 ```groovy
-implementation "app.simplecloud.plugin:plugin-shared:VERSION"
+implementation "app.simplecloud.api.plugin:plugin-shared:VERSION"
 ```
 
 ### Maven
 
 ```xml
 <dependency>
-    <groupId>app.simplecloud.plugin</groupId>
+    <groupId>app.simplecloud.api.plugin</groupId>
     <artifactId>plugin-shared</artifactId>
     <version>VERSION</version>
 </dependency>
@@ -82,16 +82,16 @@ This repository is licensed under [Apache 2.0][license].
 
 [modrinth]: https://modrinth.com/organization/simplecloud
 
-[dev]: https://repo.simplecloud.app/#/snapshots/app/simplecloud/plugin
+[dev]: https://repo.simplecloud.app/#/snapshots/app/simplecloud/api/plugin
 
 
-[artifacts]: https://repo.simplecloud.app/#/snapshots/app/simplecloud/plugin
+[artifacts]: https://repo.simplecloud.app/#/snapshots/app/simplecloud/api/plugin
 
-[dev-artifacts]: https://repo.simplecloud.app/#/snapshots/app/simplecloud/plugin
+[dev-artifacts]: https://repo.simplecloud.app/#/snapshots/app/simplecloud/api/plugin
 
 [badge-maven-central]: https://img.shields.io/maven-central/v/app.simplecloud.droplet.api/droplet-api?labelColor=18181b&style=flat-square&color=65a30d&label=Release
 
-[badge-dev]: https://repo.simplecloud.app/api/badge/latest/snapshots/app/simplecloud/plugin/plugin-shared?name=Dev&style=flat-square&color=0ea5e9
+[badge-dev]: https://repo.simplecloud.app/api/badge/latest/snapshots/app/simplecloud/api/plugin/plugin-shared?name=Dev&style=flat-square&color=0ea5e9
 
 <!-- ⛔ DON'T TOUCH -->
 

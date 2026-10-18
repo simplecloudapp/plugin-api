@@ -10,7 +10,7 @@ val commitHash = providers.exec {
 }.standardOutput.asText.get().trim()
 
 allprojects {
-    group = "app.simplecloud.plugin"
+    group = "app.simplecloud.api.plugin"
     version = if (isRelease) baseVersion else "$baseVersion-dev.$commitHash"
 }
 
