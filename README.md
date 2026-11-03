@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **Replaced:** the official plugins now share their common code in [`core` in simplecloud-plugins](https://github.com/simplecloudapp/simplecloud-plugins/tree/main/core). This repository is archived.
+
 # Plugin API
 
 ![Banner][banner]
